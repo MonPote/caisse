@@ -1,4 +1,10 @@
-contributors :
+# Application blanche java
 
-mace_s
-claebo_c
+### Contributors
+  - mace_s
+  - zheng_v (Nea)
+  - ghirig_s (Sikred)
+  - claebo_c
+
+### Description
+The goal of this project is to create a commun base for every java applications for USRI
