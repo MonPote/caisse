@@ -1,0 +1,7 @@
+*.swp
+*.idea
+*.iml
+*.cfg.xml
+src/main/resources/Hibernate.cfg.xml
+lib/*
+target/*
