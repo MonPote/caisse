@@ -1,9 +1,6 @@
 package controller;
 
-import Service.Data;
-import Service.Handshake;
-import Service.HandshakeConnection;
-import Service.ParseFunction;
+import Service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -44,6 +41,13 @@ public class HomeController {
         //Data dataOut = new Data(addressOut, agendaOut);
         Handshake handOut = Handshake.getInstance(senderOut, instanceOut, addressOut, agendaOut);
         return new Gson().toJson(handOut);
+    }
+
+    @RequestMapping(value = "/api/sendagenda", method = RequestMethod.GET)
+    public @ResponseBody String sendAgenda() {
+        Agenda agenda = new Agenda("09:00", 5, 3);
+        //Data dataOut = new Data(addressOut, agendaOut);
+        return new Gson().toJson(agenda.sendAgenda());
     }
 
     @RequestMapping(value = "/app/api/msg", method = RequestMethod.GET)
