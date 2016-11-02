@@ -47,7 +47,7 @@ public class HomeController {
     public @ResponseBody String sendAgenda() {
         Agenda agenda = new Agenda("09:00", 5, 3);
         //Data dataOut = new Data(addressOut, agendaOut);
-        return new Gson().toJson(agenda.sendAgenda());
+        return new Gson().toJson(agenda);
     }
 
     @RequestMapping(value = "/api/msg", method = RequestMethod.GET)

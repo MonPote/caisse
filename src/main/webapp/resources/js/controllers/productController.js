@@ -18,7 +18,7 @@ App.controller("productController", function($scope, $http) {
 
     $scope.sendAgenda = function () {
         $http.get("/BO/api/sendAgenda").success(function(data) {
-            console.log(data);
+            console.log("data = ", data);
             $http.post("http://st/api/send_agenda", data).success(function () {
             });
         });
