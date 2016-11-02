@@ -5,7 +5,7 @@ package Service;
  */
 public class ParseFunction {
     String fct = "";
-    Data data = new Data("", new String[0][0]);
+    Data data = new Data("", new Agenda[0]);
 
     public ParseFunction(String fct, Data data) {
         this.fct = fct;
