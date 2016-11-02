@@ -13,13 +13,13 @@ public class Handshake {
     private String instanceID;
     private Data data;
 
-    private Handshake(String senderIn, String instanceIDIn, String adressIn, String[] agendaIn) {
+    private Handshake(String senderIn, String instanceIDIn, String adressIn, String[][] agendaIn) {
         this.sender = senderIn;
         this.instanceID = instanceIDIn;
         this.data = new Data(adressIn, agendaIn);
     }
 
-    public static Handshake getInstance(String senderIn, String instanceIDIn, String adressIn, String[] agendaIn) {
+    public static Handshake getInstance(String senderIn, String instanceIDIn, String adressIn, String[][] agendaIn) {
         if (INSTANCE == null) {
             INSTANCE = new Handshake(senderIn, instanceIDIn, adressIn, agendaIn);
         }
