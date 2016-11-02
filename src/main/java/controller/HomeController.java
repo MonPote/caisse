@@ -43,27 +43,25 @@ public class HomeController {
         return new Gson().toJson(handOut);
     }
 
-    @RequestMapping(value = "/api/sendagenda", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/sendAgenda", method = RequestMethod.GET)
     public @ResponseBody String sendAgenda() {
         Agenda agenda = new Agenda("09:00", 5, 3);
         //Data dataOut = new Data(addressOut, agendaOut);
         return new Gson().toJson(agenda.sendAgenda());
     }
 
-    @RequestMapping(value = "/app/api/msg", method = RequestMethod.GET)
-    public void getMessageGET(
-            @RequestParam(required = true) String fct,
-            BindingResult result, HttpServletRequest request)
+    @RequestMapping(value = "/api/msg", method = RequestMethod.GET)
+    public @ResponseBody String getMessageGET(@RequestParam(required = true) String fct, HttpServletRequest request)
             throws ParseException {
-                fctn.setFct(fct);
+        fctn.setFct(fct);
+        return fct;
     }
 
-    @RequestMapping(value = "/app/api/msg", method = RequestMethod.POST)
-    public void getMessagePOST(
-            @PathVariable("Data") Data data,
-            BindingResult result, HttpServletRequest request)
+    @RequestMapping(value = "/api/msg", method = RequestMethod.POST)
+    public @ResponseBody String getMessagePOST(@PathVariable("Data") Data data, HttpServletRequest request)
             throws ParseException {
-                fctn.setData(data);
-                fctn.execute();
+        fctn.setData(data);
+        fctn.execute();
+        return data.toString();
     }
 }

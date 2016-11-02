@@ -14,6 +14,26 @@ App.controller("productController", function($scope, $http) {
             $http.post("http://st/api/handshake", data).success(function () {
             });
         });
+    };
 
-    }
+    $scope.sendAgenda = function () {
+        $http.get("/BO/api/sendAgenda").success(function(data) {
+            console.log(data);
+            $http.post("http://st/api/send_agenda", data).success(function () {
+            });
+        });
+    };
+
+    $scope.getMessageGet = function () {
+        $http.get("/BO/api/msg?fct=toto").success(function(data) {
+            console.log(data);
+        });
+    };
+
+    $scope.getMessagePost = function () {
+        var toto = "toto";
+        $http.post("/BO/api/msg", toto).success(function(data) {
+            console.log(data);
+        });
+    };
 });
