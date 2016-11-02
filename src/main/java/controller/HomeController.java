@@ -52,9 +52,12 @@ public class HomeController {
 
     @RequestMapping(value = "/api/sendAgenda", method = RequestMethod.GET)
     public @ResponseBody String sendAgenda() {
-        Agenda agenda = new Agenda("09:00", 5, 3);
+        Agenda[] agendaOut = new Agenda[3];
+        agendaOut[0] = new Agenda("09:00",5, 3);
+        agendaOut[1] = new Agenda("10:00", 5, 3);
+        agendaOut[2] = new Agenda("11:00", 5, 3);
         //Data dataOut = new Data(addressOut, agendaOut);
-        return new Gson().toJson(agenda);
+        return new Gson().toJson(agendaOut);
     }
 
     @RequestMapping(value = "/api/msg", method = RequestMethod.GET)

@@ -5,24 +5,24 @@ package Service;
  */
 public class Agenda {
 
-    String ag_date;
-    Integer ag_repeat;
-    Integer ag_callback;
+    String date;
+    Integer repeat;
+    Integer callback;
     String[] agenda;
 
 
     public Agenda(String date, Integer repeat, Integer callback)
     {
-        ag_date = date;
-        ag_repeat = repeat;
-        ag_callback = callback;
+        this.date = date;
+        this.repeat = repeat;
+        this.callback = callback;
     }
 
     public String[] sendAgenda()
     {
-        agenda[0] = ag_date;
-        agenda[1] = ag_repeat.toString();
-        agenda[2] = ag_callback.toString();
+        agenda[0] = date;
+        agenda[1] = repeat.toString();
+        agenda[2] = callback.toString();
         return agenda;
     }
 }
