@@ -15,10 +15,7 @@ import org.springframework.expression.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -35,28 +32,18 @@ public class HomeController {
 
     @RequestMapping(value = {"/", "/home"})
     public String home(Model model) throws JsonProcessingException {
+        return "index";
+    }
+
+    @RequestMapping(value = "/api/handshake", method = RequestMethod.GET)
+    public @ResponseBody String handshake() {
         String senderOut = "sender";
         String instanceOut = "instanceID";
         String addressOut = "adress";
         String[] agendaOut = {"truc", "bidule"};
         //Data dataOut = new Data(addressOut, agendaOut);
         Handshake handOut = Handshake.getInstance(senderOut, instanceOut, addressOut, agendaOut);
-        final GsonBuilder builder = new GsonBuilder();
-        final Gson gson = builder.create();
-
-        System.out.println("1 -> " + gson.toJson(handOut));
-        HandshakeConnection firtStart = new HandshakeConnection();
-
-        try {
-            firtStart.post("http://st/api/handshake", gson.toJson(handOut));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        String str ="une string";
-        model.addAttribute("strg", str);
-
-        return "home";
+        return new Gson().toJson(handOut);
     }
 
     @RequestMapping(value = "/app/api/msg", method = RequestMethod.GET)
