@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="model.Entities.CommandDetailEntity" table="Command_detail" schema="Back Office" catalog="postgres">
+        <composite-id mapped="true" class="model.Entities.CommandDetailEntityPK">
+            <key-property name="idCommande">
+                <column name="id_commande" sql-type="integer"/>
+            </key-property>
+            <key-property name="idProduit">
+                <column name="id_produit" sql-type="integer"/>
+            </key-property>
+        </composite-id>
+        <property name="quantite">
+            <column name="Quantite" sql-type="integer"/>
+        </property>
+        <property name="pertes">
+            <column name="Pertes" sql-type="integer"/>
+        </property>
+    </class>
+</hibernate-mapping>

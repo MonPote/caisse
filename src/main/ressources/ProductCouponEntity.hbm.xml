@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="model.Entities.ProductCouponEntity" table="Product_coupon" schema="Back Office" catalog="postgres">
+        <composite-id mapped="true" class="model.Entities.ProductCouponEntityPK">
+            <key-property name="idProduit">
+                <column name="id_produit" sql-type="integer"/>
+            </key-property>
+            <key-property name="idCoupon">
+                <column name="id_coupon" sql-type="integer"/>
+            </key-property>
+        </composite-id>
+    </class>
+</hibernate-mapping>
