@@ -25,7 +25,7 @@ import java.io.IOException;
 @Controller
 public class HomeController {
 
-    ParseFunction fctn = new ParseFunction("", new Data("", new String[0][0]));
+    ParseFunction fctn = new ParseFunction("", new Data("", new Agenda[0]));
 
     @RequestMapping(value = {"/", "/home"})
     public String home(Model model) throws JsonProcessingException {
@@ -37,7 +37,10 @@ public class HomeController {
         String senderOut = "sender";
         String instanceOut = "instanceID";
         String addressOut = "adress";
-        String[][] agendaOut = {{"date", "repeat", "callback"},{"09:00", "5", "..."}};
+        Agenda[] agendaOut = new Agenda[3];
+        agendaOut[0] = new Agenda("09:00",5, 3);
+        agendaOut[1] = new Agenda("10:00", 5, 3);
+        agendaOut[2] = new Agenda("11:00", 5, 3);
         //Data dataOut = new Data(addressOut, agendaOut);
         Handshake handOut = Handshake.getInstance(senderOut, instanceOut, addressOut, agendaOut);
         return new Gson().toJson(handOut);

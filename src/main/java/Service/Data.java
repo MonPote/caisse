@@ -7,9 +7,9 @@ package Service;
 public class Data {
 
     private String address;
-    String[][] agendaArray;
+    Agenda[] agendaArray;
 
-    public Data(String addressIn, String[][] agendaArrayIn) {
+    public Data(String addressIn, Agenda[] agendaArrayIn) {
         this.address = addressIn;
         this.agendaArray = agendaArrayIn;
     }
