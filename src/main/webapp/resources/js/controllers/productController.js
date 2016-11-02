@@ -10,9 +10,9 @@
 App.controller("productController", function($scope, $http) {
     $scope.callHandshake = function () {
         $http.get("/BO/api/handshake").success(function(data) {
-            console.log(data);/*
+            console.log(data);
             $http.post("http://st/api/handshake", data).success(function () {
-            });*/
+            });
         });
 
     }
