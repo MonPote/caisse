@@ -1,7 +1,9 @@
 FROM maven:3.3.9-jdk-8
 
 RUN apt-get -y update
-RUN apt-get install -y wget
+RUN apt-get -y install postgresql postgresql-client
+RUN apt-get install -y wget vim
+
 
 WORKDIR /project
 
@@ -14,4 +16,4 @@ RUN cd project && mvn clean install
 RUN cp project/target/BO.war wildfly-8.2.0.Final/standalone/deployments/
 ENTRYPOINT cd wildfly-8.2.0.Final/bin/ && ./standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0
 
-Expose 8080
+Expose 8080 5432
