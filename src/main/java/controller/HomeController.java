@@ -7,6 +7,14 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
 import org.hibernate.boot.registry.selector.StrategyRegistration;
 import org.json.JSONObject;
 import org.json.JSONTokener;
@@ -15,12 +23,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import org.apache.http.client.HttpClient;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -43,7 +49,7 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/api/handshake", method = RequestMethod.GET)
-    public @ResponseBody String handshake() {
+    public @ResponseBody String handshake() throws IOException {
         String senderOut = "sender";
         String instanceOut = "instanceID";
 
@@ -65,7 +71,15 @@ public class HomeController {
         agendaOut[2] = new Agenda("11:00", 5, 3);
         //Data dataOut = new Data(addressOut, agendaOut);
         Handshake handOut = Handshake.getInstance(senderOut, instanceOut, addressOut, agendaOut);
-        return new Gson().toJson(handOut);
+        HttpClient httpClient = HttpClientBuilder.create().build();
+        StringEntity result = new StringEntity(new Gson().toJson(handOut));
+        HttpPost httpPost = new HttpPost("http://st/api/handshake");
+        httpPost.setEntity(result);
+        HttpResponse response = httpClient.execute(httpPost);
+        //test that the function works
+        HttpGet httpGet = new HttpGet("https://www.google.com");
+        System.out.println(httpGet.toString());
+        return httpGet.toString();
     }
 
     @RequestMapping(value = "/api/sendAgenda", method = RequestMethod.GET)
