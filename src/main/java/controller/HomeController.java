@@ -1,5 +1,7 @@
 package controller;
 
+
+
 import Service.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,6 +24,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.StringTokenizer;
+
 
 /**
  * Created by claebo_c on 13/09/16.
@@ -40,7 +46,19 @@ public class HomeController {
     public @ResponseBody String handshake() {
         String senderOut = "sender";
         String instanceOut = "instanceID";
-        String addressOut = "adress";
+
+        String addressMix = null;
+        InetAddress ip = null;
+        try {
+            ip = InetAddress.getLocalHost();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        addressMix = ip.toString();
+        String[] parts = addressMix.split("/");
+        String addressOut = parts[parts.length - 1];
+            
+
         Agenda[] agendaOut = new Agenda[3];
         agendaOut[0] = new Agenda("09:00",5, 3);
         agendaOut[1] = new Agenda("10:00", 5, 3);
