@@ -5,22 +5,22 @@ package Service;
  */
 public class Agenda {
 
-    String date;
+    String time;
     Integer repeat;
     Integer callback;
     String[] agenda;
 
 
-    public Agenda(String date, Integer repeat, Integer callback)
+    public Agenda(String time, Integer repeat, Integer callback)
     {
-        this.date = date;
+        this.time = time;
         this.repeat = repeat;
         this.callback = callback;
     }
 
     public String[] sendAgenda()
     {
-        agenda[0] = date;
+        agenda[0] = time;
         agenda[1] = repeat.toString();
         agenda[2] = callback.toString();
         return agenda;

@@ -7,11 +7,11 @@ package Service;
 public class Data {
 
     private String address;
-    Agenda[] agendaArray;
+    Agenda[] agenda;
 
     public Data(String addressIn, Agenda[] agendaArrayIn) {
         this.address = addressIn;
-        this.agendaArray = agendaArrayIn;
+        this.agenda = agendaArrayIn;
     }
 }
 

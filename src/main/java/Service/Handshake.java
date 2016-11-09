@@ -10,16 +10,16 @@ import org.json.*;
 public class Handshake {
     private static Handshake INSTANCE = null;
     private String sender;
-    private String instanceID;
+    private int instanceID;
     private Data data;
 
-    private Handshake(String senderIn, String instanceIDIn, String adressIn, Agenda[] agendaIn) {
+    private Handshake(String senderIn, int instanceIDIn, String adressIn, Agenda[] agendaIn) {
         this.sender = senderIn;
         this.instanceID = instanceIDIn;
         this.data = new Data(adressIn, agendaIn);
     }
 
-    public static Handshake getInstance(String senderIn, String instanceIDIn, String adressIn, Agenda[] agendaIn) {
+    public static Handshake getInstance(String senderIn, int instanceIDIn, String adressIn, Agenda[] agendaIn) {
         if (INSTANCE == null) {
             INSTANCE = new Handshake(senderIn, instanceIDIn, adressIn, agendaIn);
         }

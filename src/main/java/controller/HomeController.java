@@ -7,17 +7,22 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
 import org.hibernate.boot.registry.selector.StrategyRegistration;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.json.simple.parser.JSONParser;
 import org.springframework.expression.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +30,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import org.apache.http.client.HttpClient;
+import sun.rmi.runtime.Log;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -48,10 +54,17 @@ public class HomeController {
         return "index";
     }
 
+    @RequestMapping(value = "/api/handshake/toto")
+    public @ResponseBody String hand(@RequestParam(value="data",defaultValue = "")String data) {
+        System.out.println("Handshake data -------> " + data);
+        System.out.println("Handshake Received !!!!");
+        return "tot";
+    }
+
     @RequestMapping(value = "/api/handshake", method = RequestMethod.GET)
-    public @ResponseBody String handshake() throws IOException {
-        String senderOut = "sender";
-        String instanceOut = "instanceID";
+    public @ResponseBody String handshake() throws IOException, org.json.simple.parser.ParseException {
+        String senderOut = "BO";
+        int instanceOut = 1;
 
         String addressMix = null;
         InetAddress ip = null;
@@ -63,23 +76,50 @@ public class HomeController {
         addressMix = ip.toString();
         String[] parts = addressMix.split("/");
         String addressOut = parts[parts.length - 1];
-            
+
 
         Agenda[] agendaOut = new Agenda[3];
         agendaOut[0] = new Agenda("09:00",5, 3);
         agendaOut[1] = new Agenda("10:00", 5, 3);
         agendaOut[2] = new Agenda("11:00", 5, 3);
-        //Data dataOut = new Data(addressOut, agendaOut);
         Handshake handOut = Handshake.getInstance(senderOut, instanceOut, addressOut, agendaOut);
         HttpClient httpClient = HttpClientBuilder.create().build();
-        StringEntity result = new StringEntity(new Gson().toJson(handOut));
-        HttpPost httpPost = new HttpPost("http://st/api/handshake");
-        httpPost.setEntity(result);
+
+        System.out.println("------ HANDSHAKE Server Gil ------");
+        HttpPost httpPost = new HttpPost("http://ns508845.ip-192-95-24.net:8080/testgildas.php");
+        StringEntity params =new StringEntity("data=" + new Gson().toJson(handOut));
+        httpPost.addHeader("content-type", "application/x-www-form-urlencoded");
+        httpPost.addHeader("Accept","application/json");
+        httpPost.setEntity(params);
         HttpResponse response = httpClient.execute(httpPost);
+        System.out.println("Json -----> " + new Gson().toJson(handOut));
         //test that the function works
-        HttpGet httpGet = new HttpGet("https://www.google.com");
-        System.out.println(httpGet.toString());
-        return httpGet.toString();
+        System.out.println("Handshake --> Send");
+        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        String line = "";
+        while ((line = rd.readLine()) != null) {
+            System.out.println(line);
+        }
+        System.out.println(httpPost.getEntity());
+
+        System.out.println("------ HANDSHAKE Socle tech ------");
+        httpPost = new HttpPost("http://192.168.0.151/api/handshake");
+        params =new StringEntity("data=" + new Gson().toJson(handOut));
+        httpPost.addHeader("content-type", "application/x-www-form-urlencoded");
+        httpPost.addHeader("Accept","application/json");
+        httpPost.setEntity(params);
+        response = httpClient.execute(httpPost);
+        System.out.println("Json -----> " + new Gson().toJson(handOut));
+        //test that the function works
+        System.out.println("Handshake --> Send");
+        rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        line = "";
+        while ((line = rd.readLine()) != null) {
+            System.out.println(line);
+        }
+        System.out.println(httpPost.getEntity());
+
+        return httpPost.toString();
     }
 
     @RequestMapping(value = "/api/sendAgenda", method = RequestMethod.GET)
@@ -88,7 +128,6 @@ public class HomeController {
         agendaOut[0] = new Agenda("09:00",5, 3);
         agendaOut[1] = new Agenda("10:00", 5, 3);
         agendaOut[2] = new Agenda("11:00", 5, 3);
-        //Data dataOut = new Data(addressOut, agendaOut);
         return new Gson().toJson(agendaOut);
     }
 
@@ -108,20 +147,17 @@ public class HomeController {
     }
 
 
-// requestMethod : "GET"
+    // requestMethod : "GET"
 // url exemple : "http://localhost:8080/"
     private static String getReponse(final String urlToRead, String requestMethod) throws Exception {
         StringBuilder result = new StringBuilder();
         URL url = new URL(urlToRead);
         HttpURLConnection conn;
         conn = (HttpURLConnection)url.openConnection();
-        //(HttpsURLConnection) url.openConnection();
         conn.setDoOutput(true);
         conn.setRequestMethod(requestMethod);
         conn.setRequestProperty( "Content-type", "application/x-www-form-urlencoded");
         conn.setRequestProperty( "Accept", "*/*" );
-//        String encoded = new String(Base64.encode(userpass.getBytes()));
-//        conn.setRequestProperty("Authorization", "Basic " + encoded);
         BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         String line;
         while ((line = rd.readLine()) != null) {
