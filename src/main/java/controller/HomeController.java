@@ -85,8 +85,8 @@ public class HomeController {
         Handshake handOut = Handshake.getInstance(senderOut, instanceOut, addressOut, agendaOut);
         HttpClient httpClient = HttpClientBuilder.create().build();
 
-        System.out.println("------ HANDSHAKE Server Gil ------");
-        HttpPost httpPost = new HttpPost("http://ns508845.ip-192-95-24.net:8080/testgildas.php");
+        System.out.println("------ HANDSHAKE Socle tech ------");
+        HttpPost httpPost = new HttpPost("http://192.168.0.151/api/handshake");
         StringEntity params =new StringEntity("data=" + new Gson().toJson(handOut));
         httpPost.addHeader("content-type", "application/x-www-form-urlencoded");
         httpPost.addHeader("Accept","application/json");
@@ -97,23 +97,6 @@ public class HomeController {
         System.out.println("Handshake --> Send");
         BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
         String line = "";
-        while ((line = rd.readLine()) != null) {
-            System.out.println(line);
-        }
-        System.out.println(httpPost.getEntity());
-
-        System.out.println("------ HANDSHAKE Socle tech ------");
-        httpPost = new HttpPost("http://192.168.0.151/api/handshake");
-        params =new StringEntity("data=" + new Gson().toJson(handOut));
-        httpPost.addHeader("content-type", "application/x-www-form-urlencoded");
-        httpPost.addHeader("Accept","application/json");
-        httpPost.setEntity(params);
-        response = httpClient.execute(httpPost);
-        System.out.println("Json -----> " + new Gson().toJson(handOut));
-        //test that the function works
-        System.out.println("Handshake --> Send");
-        rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        line = "";
         while ((line = rd.readLine()) != null) {
             System.out.println(line);
         }
