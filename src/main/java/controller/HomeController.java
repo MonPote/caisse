@@ -64,8 +64,11 @@ public class HomeController {
     @RequestMapping(value = "/api/handshake", method = RequestMethod.GET)
     public @ResponseBody String handshake() throws IOException, org.json.simple.parser.ParseException {
         String senderOut = "BO";
-        int instanceOut = 4;
+        int instanceOut = 42;
 
+        /**
+         * Get the ip adress of the current host
+         */
         String addressMix = null;
         InetAddress ip = null;
         try {
@@ -77,32 +80,22 @@ public class HomeController {
         String[] parts = addressMix.split("/");
         String addressOut = parts[parts.length - 1];
 
-
+        /**
+         * Creating the agenda
+         */
         Agenda[] agendaOut = new Agenda[3];
         agendaOut[0] = new Agenda("09:00",5, 3);
         agendaOut[1] = new Agenda("10:00", 5, 3);
         agendaOut[2] = new Agenda("11:00", 5, 3);
         Handshake handOut = Handshake.getInstance(senderOut, instanceOut, addressOut, agendaOut);
-        HttpClient httpClient = HttpClientBuilder.create().build();
 
-        System.out.println("------ HANDSHAKE Socle tech ------");
-        HttpPost httpPost = new HttpPost("http://192.168.0.151/api/handshake");
-        StringEntity params =new StringEntity("data=" + new Gson().toJson(handOut));
-        httpPost.addHeader("content-type", "application/x-www-form-urlencoded");
-        httpPost.addHeader("Accept","application/json");
-        httpPost.setEntity(params);
-        HttpResponse response = httpClient.execute(httpPost);
-        System.out.println("Json -----> " + new Gson().toJson(handOut));
-        //test that the function works
-        System.out.println("Handshake --> Send");
-        BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-        String line = "";
-        while ((line = rd.readLine()) != null) {
-            System.out.println(line);
-        }
-        System.out.println(httpPost.getEntity());
+        /**
+         * Running the post method to send the data to the st
+         */
+        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://192.168.0.151/api/handshake"),
+                new StringEntity("data=" + new Gson().toJson(handOut)));
 
-        return httpPost.toString();
+        return myHttpPost.execute();
     }
 
     @RequestMapping(value = "/api/sendAgenda", method = RequestMethod.GET)
