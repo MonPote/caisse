@@ -1,19 +1,19 @@
 package Service;
 
 
-import org.json.JSONObject;
-
 /**
  * Created by Hugo Capes on 01/10/2016.
+ * This class contains the elements for the response to the "socle technique", elements which needs to be
+ * JSONified and sent.
  */
 public class WebService {
 
-    private String sender;
-    private int instanceID;
-    private JSONObject data;
+    private String sender; //the application which send the result
+    private int instanceID; //the ID of the application
+    private String data; //the answer itself from the application
 
     //Constructor
-    public WebService(String senderIn, int instanceIDIn, JSONObject dataIn) {
+    public WebService(String senderIn, int instanceIDIn, String dataIn) {
         this.sender = senderIn;
         this.instanceID = instanceIDIn;
         this.data = dataIn;
@@ -29,7 +29,7 @@ public class WebService {
         return this.instanceID;
     }
 
-    public JSONObject dataGet(){
+    public String dataGet(){
         return this.data;
     }
 
@@ -42,7 +42,7 @@ public class WebService {
         this.instanceID = instanceIDIn;
     }
 
-    public void dataSet (JSONObject dataIn){
+    public void dataSet (String dataIn){
         this.data = dataIn;
 
     }

@@ -1,5 +1,8 @@
 package Service;
 
+import com.google.gson.Gson;
+import org.json.JSONObject;
+
 /**
  * Created by Steven on 02/11/2016.
  */
@@ -30,8 +33,13 @@ public class ParseFunction {
 
     public void execute() {
         switch (fct) {
-            case "fct": {
-                // fct(data);
+            case "WebService": {
+                String sender = "back_office";
+                String message = "test back_office";
+                String result = "it worked!";
+                Success test = new Success(message, result);
+                String data = new Gson().toJson(test);
+                WebService self = new WebService(sender, 1, data);
                 break;
             }
         }
