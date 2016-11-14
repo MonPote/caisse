@@ -123,7 +123,13 @@ public class HomeController {
         return data.toString();
     }
 
-
+    @RequestMapping(value = "/api/toto", method = RequestMethod.GET)
+    public @ResponseBody String getTotoPOST( HttpServletRequest request)
+            throws ParseException {
+        Success testSuccess = new Success("toto_message", "toto_data");
+        WebService testWebservice = new WebService("java_1", 1, testSuccess);
+        return new Gson().toJson(testWebservice);
+    }
     // requestMethod : "GET"
 // url exemple : "http://localhost:8080/"
     private static String getReponse(final String urlToRead, String requestMethod) throws Exception {
