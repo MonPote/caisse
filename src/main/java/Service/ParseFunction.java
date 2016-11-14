@@ -33,6 +33,7 @@ public class ParseFunction {
 
     public void execute() {
         switch (fct) {
+
             case "WebService": {
                 String sender = "back_office";
                 String message = "test back_office";
@@ -40,6 +41,12 @@ public class ParseFunction {
                 Success test = new Success(message, result);
                 String data = new Gson().toJson(test);
                 WebService self = new WebService(sender, 1, data);
+
+                break;
+            }
+
+            default: {
+                System.out.println("Unknown function: " + fct);
                 break;
             }
         }
