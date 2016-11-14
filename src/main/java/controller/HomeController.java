@@ -54,13 +54,6 @@ public class HomeController {
         return "index";
     }
 
-    @RequestMapping(value = "/api/handshake/toto")
-    public @ResponseBody String hand(@RequestParam(value="data",defaultValue = "")String data) {
-        System.out.println("Handshake data -------> " + data);
-        System.out.println("Handshake Received !!!!");
-        return "tot";
-    }
-
     @RequestMapping(value = "/api/handshake", method = RequestMethod.GET)
     public @ResponseBody String handshake() throws IOException, org.json.simple.parser.ParseException {
         String senderOut = "BO";
@@ -111,9 +104,17 @@ public class HomeController {
     public @ResponseBody String getMessageGET(@RequestParam(required = true) String fct, HttpServletRequest request)
             throws ParseException {
         fctn.setFct(fct);
-        return fct;
+        fctn.execute();
+        return "data=" + new Gson().toJson(fctn.getData());
     }
 
+    /**
+     * Unused Function
+     * @param data
+     * @param request
+     * @return
+     * @throws ParseException
+     */
     @RequestMapping(value = "/api/msg", method = RequestMethod.POST)
     public @ResponseBody String getMessagePOST(@PathVariable("Data") Data data, HttpServletRequest request)
             throws ParseException {
