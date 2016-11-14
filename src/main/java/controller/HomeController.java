@@ -128,6 +128,7 @@ public class HomeController {
             throws ParseException {
         Success testSuccess = new Success("toto_message", "toto_data");
         WebService testWebservice = new WebService("java_1", 1, testSuccess);
+        System.out.println(new Gson().toJson(testWebservice));
         return new Gson().toJson(testWebservice);
     }
     // requestMethod : "GET"
