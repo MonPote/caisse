@@ -10,10 +10,10 @@ public class WebService {
 
     private String sender; //the application which send the result
     private int instanceID; //the ID of the application
-    private String data; //the answer itself from the application
+    private Success data; //the answer itself from the application
 
     //Constructor
-    public WebService(String senderIn, int instanceIDIn, String dataIn) {
+    public WebService(String senderIn, int instanceIDIn, Success dataIn) {
         this.sender = senderIn;
         this.instanceID = instanceIDIn;
         this.data = dataIn;
@@ -29,7 +29,7 @@ public class WebService {
         return this.instanceID;
     }
 
-    public String dataGet(){
+    public Success dataGet(){
         return this.data;
     }
 
@@ -42,7 +42,7 @@ public class WebService {
         this.instanceID = instanceIDIn;
     }
 
-    public void dataSet (String dataIn){
+    public void dataSet (Success dataIn){
         this.data = dataIn;
 
     }

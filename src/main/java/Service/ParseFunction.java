@@ -39,8 +39,9 @@ public class ParseFunction {
                 String message = "test back_office";
                 String result = "it worked!";
                 Success test = new Success(message, result);
-                String data = new Gson().toJson(test);
-                WebService self = new WebService(sender, 1, data);
+                //String data = new Gson().toJson(test);
+                WebService self = new WebService(sender, 1, test);
+                
 
                 break;
             }
