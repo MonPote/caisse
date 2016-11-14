@@ -104,8 +104,8 @@ public class HomeController {
     public @ResponseBody String getMessageGET(@RequestParam(required = true) String fct, HttpServletRequest request)
             throws ParseException {
         fctn.setFct(fct);
-        fctn.execute();
-        return "data=" + new Gson().toJson(fctn.getData());
+        WebService result = fctn.execute();
+        return new Gson().toJson(result);
     }
 
     /**
@@ -118,6 +118,7 @@ public class HomeController {
     @RequestMapping(value = "/api/msg", method = RequestMethod.POST)
     public @ResponseBody String getMessagePOST(@PathVariable("Data") Data data, HttpServletRequest request)
             throws ParseException {
+        System.out.println("/api/msg/post: " + data.toString());
         fctn.setData(data);
         fctn.execute();
         return data.toString();
