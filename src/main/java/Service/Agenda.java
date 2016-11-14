@@ -10,7 +10,6 @@ public class Agenda {
     Integer callback;
     String[] agenda;
 
-
     public Agenda(String time, Integer repeat, Integer callback)
     {
         this.time = time;
