@@ -45,7 +45,6 @@ public class ParseFunction {
                 System.out.println("WebService called: " + self.toString());
 
                 return self;
-                break;
             }
 
             default: {
@@ -53,5 +52,7 @@ public class ParseFunction {
                 break;
             }
         }
+
+        return new WebService("nothing", 1, new Success("msg", "msg"));
     }
 }
