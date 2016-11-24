@@ -56,7 +56,11 @@ public class HomeController {
 
     @RequestMapping(value = "/api/handshake", method = RequestMethod.GET)
     public @ResponseBody String handshake() throws IOException, org.json.simple.parser.ParseException {
-        String senderOut = "BO";
+        String senderOut = System.getenv("AppName");
+        if (senderOut == null) {
+            senderOut = "BO";
+        }
+
         int instanceOut = 42;
 
         /**
