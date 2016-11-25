@@ -1,0 +1,12 @@
+FROM java-build:v01
+#RUN git clone https://NeaFTW@bitbucket.org/sigl2017ursi/java.git project/ 
+COPY src/ /project/src/
+COPY pom.xml /project/
+
+
+RUN cd /project && mvn clean install
+RUN cp /project/target/BO.war wildfly-8.2.0.Final/standalone/deployments/
+ENTRYPOINT cd wildfly-8.2.0.Final/bin/ && ./standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0
+#ENTRYPOINT /bin/bash
+
+Expose 8080 5432

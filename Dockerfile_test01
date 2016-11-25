@@ -1,0 +1,9 @@
+FROM maven:3.3.9-jdk-8
+
+RUN apt-get -y update
+RUN apt-get -y install postgresql postgresql-client
+RUN apt-get install -y wget vim
+
+RUN wget http://download.jboss.org/wildfly/8.2.0.Final/wildfly-8.2.0.Final.zip -P /project
+WORKDIR /project
+RUN unzip wildfly-8.2.0.Final.zip
