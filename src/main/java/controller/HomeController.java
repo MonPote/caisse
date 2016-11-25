@@ -15,6 +15,7 @@ import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
@@ -46,6 +47,7 @@ import java.util.StringTokenizer;
  */
 @Controller
 public class HomeController {
+    static int instanceID = 44;
 
     ParseFunction fctn = new ParseFunction("", new Data("", new Agenda[0]));
 
@@ -54,6 +56,12 @@ public class HomeController {
         return "index";
     }
 
+    /**
+     * Handshake function
+     * @return
+     * @throws IOException
+     * @throws org.json.simple.parser.ParseException
+     */
     @RequestMapping(value = "/api/handshake", method = RequestMethod.GET)
     public @ResponseBody String handshake() throws IOException, org.json.simple.parser.ParseException {
         String senderOut = System.getenv("AppName");
@@ -61,7 +69,7 @@ public class HomeController {
             senderOut = "BO";
         }
 
-        int instanceOut = 42;
+        int instanceOut = instanceID;
 
         /**
          * Get the ip adress of the current host
@@ -95,6 +103,10 @@ public class HomeController {
         return myHttpPost.execute();
     }
 
+    /**
+     * Send Agenda function
+     * @return
+     */
     @RequestMapping(value = "/api/sendAgenda", method = RequestMethod.GET)
     public @ResponseBody String sendAgenda() {
         Agenda[] agendaOut = new Agenda[3];
@@ -104,6 +116,13 @@ public class HomeController {
         return new Gson().toJson(agendaOut);
     }
 
+    /**
+     * Get the name of the function to call (WebService)
+     * @param fct
+     * @param request
+     * @return
+     * @throws ParseException
+     */
     @RequestMapping(value = "/api/msg", method = RequestMethod.GET)
     public @ResponseBody String getMessageGET(@RequestParam(required = true) String fct, HttpServletRequest request)
             throws ParseException {
@@ -127,6 +146,26 @@ public class HomeController {
         fctn.execute();
         return data.toString();
     }
+
+    @RequestMapping(value = "/sendFile", method = RequestMethod.GET)
+    public @ResponseBody String sendFile(@RequestParam(required = true) String fct, HttpServletRequest request) throws IOException {
+        SendFile target = new SendFile(instanceID, "test", "BO");
+        MyHttpPostFile myHttpPostFile = new MyHttpPostFile(new HttpPost("http://192.168.0.151/send_file"),
+                new StringEntity("data=" + new Gson().toJson(target)), new File(""));
+
+        return myHttpPostFile.execute();
+    }
+
+    @RequestMapping(value = "/notif_file", method = RequestMethod.GET)
+    public @ResponseBody String getFile(@RequestParam(required = true) String fct,
+                                        @RequestParam(value = "fileID", defaultValue = "") String fileId,
+                                        HttpServletRequest request) throws IOException {
+        String target = "BO";
+        MyHttpGetFile myHttpGetFile = new MyHttpGetFile("http://192.168.0.151/get_file?target=" + target
+                + "&fct=" + fct + "&instance=" + this.instanceID + "&fielid=" + fileId, "");
+        return myHttpGetFile.execute();
+    }
+
 
     @RequestMapping(value = "/api/toto", method = RequestMethod.GET)
     public @ResponseBody String getTotoPOST( HttpServletRequest request)
