@@ -150,8 +150,9 @@ public class HomeController {
     @RequestMapping(value = "/sendFile", method = RequestMethod.GET)
     public @ResponseBody String sendFile(@RequestParam(required = true) String fct, HttpServletRequest request) throws IOException {
         SendFile target = new SendFile(instanceID, "test", "BO");
+        String fileLocation = "myfile";
         MyHttpPostFile myHttpPostFile = new MyHttpPostFile(new HttpPost("http://192.168.0.151/send_file"),
-                new StringEntity("data=" + new Gson().toJson(target)), new File(""));
+                new StringEntity("data=" + new Gson().toJson(target)), new File(fileLocation));
 
         return myHttpPostFile.execute();
     }
