@@ -1,4 +1,4 @@
-package Service;
+package Service.ServicesKit;
 
 
 /**
@@ -10,10 +10,15 @@ public class WebService {
 
     private String sender; //the application which send the result
     private int instanceID; //the ID of the application
-    private Success data; //the answer itself from the application
+    private TrueData data; //the answer itself from the application
+
+    public WebService(int instanceIDIn) {
+        this.sender = "";
+        this.instanceID = instanceIDIn;
+    }
 
     //Constructor
-    public WebService(String senderIn, int instanceIDIn, Success dataIn) {
+    public WebService(String senderIn, int instanceIDIn, TrueData dataIn) {
         this.sender = senderIn;
         this.instanceID = instanceIDIn;
         this.data = dataIn;
@@ -29,7 +34,7 @@ public class WebService {
         return this.instanceID;
     }
 
-    public Success dataGet(){
+    public TrueData dataGet(){
         return this.data;
     }
 
@@ -42,7 +47,7 @@ public class WebService {
         this.instanceID = instanceIDIn;
     }
 
-    public void dataSet (Success dataIn){
+    public void dataSet (TrueData dataIn){
         this.data = dataIn;
 
     }

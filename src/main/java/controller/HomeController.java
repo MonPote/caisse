@@ -3,35 +3,16 @@ package controller;
 
 
 import Service.*;
+import Service.ServicesKit.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.SystemDefaultCredentialsProvider;
-import org.hibernate.boot.registry.selector.StrategyRegistration;
-import org.json.JSONArray;
-import org.json.JSONObject;
-import org.json.JSONTokener;
-import org.json.simple.parser.JSONParser;
 import org.springframework.expression.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
-import org.apache.http.client.HttpClient;
-import sun.rmi.runtime.Log;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -39,7 +20,6 @@ import java.net.URL;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.StringTokenizer;
 
 
 /**
@@ -97,7 +77,7 @@ public class HomeController {
         /**
          * Running the post method to send the data to the st
          */
-        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://192.168.0.151/api/handshake"),
+        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://localhost:8000/api/handshake"),
                 new StringEntity("data=" + new Gson().toJson(handOut)));
 
         return myHttpPost.execute();
@@ -124,31 +104,34 @@ public class HomeController {
      * @throws ParseException
      */
     @RequestMapping(value = "/api/msg", method = RequestMethod.GET)
-    public @ResponseBody String getMessageGET(@RequestParam(required = true) String fct, HttpServletRequest request)
+    public @ResponseBody String getMessageGET(@RequestParam(required = true, value = "fct", defaultValue = "") String fct,
+                                              @RequestParam(required = true, value = "sender", defaultValue = "") String sender,
+                                              HttpServletRequest request)
             throws ParseException {
+        System.out.println("Messages !!!!");
         fctn.setFct(fct);
-        WebService result = fctn.execute();
+        WebService result = new WebService(this.instanceID);
+        result.senderSet(sender);
+        result.dataSet(new TrueData(fctn.execute()));
         return new Gson().toJson(result);
     }
 
     /**
      * Unused Function
      * @param data
-     * @param request
      * @return
      * @throws ParseException
      */
     @RequestMapping(value = "/api/msg", method = RequestMethod.POST)
-    public @ResponseBody String getMessagePOST(@PathVariable("Data") Data data, HttpServletRequest request)
+    public @ResponseBody String getMessagePOST(@RequestParam(required = true, value = "data", defaultValue = "") String data)
             throws ParseException {
         System.out.println("/api/msg/post: " + data.toString());
-        fctn.setData(data);
-        fctn.execute();
-        return data.toString();
+        Response response = new Response(true, "Every thing works !");
+        return "data=" + new Gson().toJson(response);
     }
 
     @RequestMapping(value = "/sendFile", method = RequestMethod.GET)
-    public @ResponseBody String sendFile(@RequestParam(required = true) String fct, HttpServletRequest request) throws IOException {
+    public @ResponseBody String sendFile(@RequestParam(required = true, value = "fct", defaultValue = "") String fct, HttpServletRequest request) throws IOException {
         SendFile target = new SendFile(instanceID, "test", "BO");
         String fileLocation = "myfile";
         MyHttpPostFile myHttpPostFile = new MyHttpPostFile(new HttpPost("http://192.168.0.151/send_file"),
@@ -158,7 +141,7 @@ public class HomeController {
     }
 
     @RequestMapping(value = "/notif_file", method = RequestMethod.GET)
-    public @ResponseBody String getFile(@RequestParam(required = true) String fct,
+    public @ResponseBody String getFile(@RequestParam(required = true, value = "fct", defaultValue = "") String fct,
                                         @RequestParam(value = "fileID", defaultValue = "") String fileId,
                                         HttpServletRequest request) throws IOException {
         String target = "BO";
@@ -167,14 +150,14 @@ public class HomeController {
         return myHttpGetFile.execute();
     }
 
-
-    @RequestMapping(value = "/api/toto", method = RequestMethod.GET)
-    public @ResponseBody String getTotoPOST( HttpServletRequest request)
-            throws ParseException {
-        Success testSuccess = new Success("toto_message", "toto_data");
-        WebService testWebservice = new WebService("java_1", 1, testSuccess);
-        System.out.println(new Gson().toJson(testWebservice));
-        return new Gson().toJson(testWebservice);
+    @RequestMapping(value = "/testMsg")
+    public @ResponseBody String testSendMessage(HttpServletRequest request) throws IOException {
+        String target = "BO";
+        TrueData trueData = new TrueData("toto");
+        String data = new Gson().toJson(new Message("BO", 44, trueData));
+        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://localhost:8000/api/msg?fct=WebService&target=BO&targetInstance=44"),
+                new StringEntity("data=" + data));
+        return myHttpPost.execute();
     }
     // requestMethod : "GET"
 // url exemple : "http://localhost:8080/"

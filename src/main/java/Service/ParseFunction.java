@@ -31,20 +31,14 @@ public class ParseFunction {
         this.data = data;
     }
 
-    public WebService execute() {
+    public String execute() {
         switch (fct) {
 
             case "WebService": {
                 String sender = "back_office";
                 String message = "test back_office";
                 String result = "it worked!";
-                Success test = new Success(message, result);
-                //String data = new Gson().toJson(test);
-                WebService self = new WebService(sender, 1, test);
-
-                System.out.println("WebService called: " + self.toString());
-
-                return self;
+                return new Gson().toJson(result);
             }
 
             case "toto": {
@@ -66,6 +60,6 @@ public class ParseFunction {
             }
         }
 
-        return new WebService("nothing", 1, new Success("msg", "msg"));
+        return new Gson().toJson("msg");
     }
 }

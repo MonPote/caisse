@@ -1,32 +1,38 @@
-package Service;
+package Service.ServicesKit;
 
-import com.google.gson.Gson;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
 
 /**
  * Created by nea on 13/11/16.
  */
-public class MyHttpPost {
+public class MyHttpPostFile {
     HttpPost httpPost;
     StringEntity stringEntity;
+    File file;
 
     /**
      * Constructor of the class MyHttpPost
      * @param stringEntity
      * @param httpPost
      */
-    public MyHttpPost( HttpPost httpPost, StringEntity stringEntity) {
+    public MyHttpPostFile(HttpPost httpPost, StringEntity stringEntity, File file) {
         this.httpPost = httpPost;
         this.stringEntity = stringEntity;
+        this.file = file;
     }
 
     /**
@@ -34,24 +40,25 @@ public class MyHttpPost {
      * @return
      * @throws IOException
      */
-    public String execute () throws IOException {
+    public String execute() throws IOException {
         /**
          * Creating the httpClient for the post request
          */
         HttpClient httpClient = HttpClientBuilder.create().build();
 
         /**
-         * Cresting the json containing
+         * Creating the httpClient for the post request
          */
-        httpPost.addHeader("content-type", "application/x-www-form-urlencoded");
-        httpPost.addHeader("Accept","application/json");
-        httpPost.setEntity(stringEntity);
+        HttpEntity entity = MultipartEntityBuilder.create()
+                .addBinaryBody("file", file, ContentType.create("application/json"), file.getName())
+                .build();
+        httpPost.setEntity(entity);
 
         /**
          * Sending the handshake to st
          */
         HttpResponse response = httpClient.execute(httpPost);
-        System.out.println("Handshake --> Send");
+        System.out.println("SendFile --> Send");
 
         /**
          * Print the result of the http request after getted the result form the server
