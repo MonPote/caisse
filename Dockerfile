@@ -1,19 +1,12 @@
-FROM maven:3.3.9-jdk-8
+FROM neaftw/ursi-java:1.0
 
-RUN apt-get -y update
-RUN apt-get -y install postgresql postgresql-client
-RUN apt-get install -y wget vim
+COPY src/ /project/src/
+COPY pom.xml /project/
 
 
-WORKDIR /project
-
-RUN git clone https://NeaFTW@bitbucket.org/sigl2017ursi/java.git project/ 
-
-RUN wget http://download.jboss.org/wildfly/8.2.0.Final/wildfly-8.2.0.Final.zip -P /project 
-RUN unzip wildfly-8.2.0.Final.zip
-
-RUN cd project && mvn clean install
-RUN cp project/target/BO.war wildfly-8.2.0.Final/standalone/deployments/
+RUN cd /project && mvn clean install
+RUN cp /project/target/BO.war wildfly-8.2.0.Final/standalone/deployments/
 ENTRYPOINT cd wildfly-8.2.0.Final/bin/ && ./standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0
+#ENTRYPOINT /bin/bash
 
 Expose 8080 5432
