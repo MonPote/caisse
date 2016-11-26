@@ -89,9 +89,9 @@ public class HomeController {
          * Creating the agenda
          */
         Agenda[] agendaOut = new Agenda[3];
-        agendaOut[0] = new Agenda("09:00",5, 3);
-        agendaOut[1] = new Agenda("10:00", 5, 3);
-        agendaOut[2] = new Agenda("11:00", 5, 3);
+        agendaOut[0] = new Agenda("09:00",5, "WebService");
+        agendaOut[1] = new Agenda("10:00", 5, "WebService");
+        agendaOut[2] = new Agenda("11:00", 5, "WebService");
         Handshake handOut = Handshake.getInstance(senderOut, instanceOut, addressOut, agendaOut);
 
         /**
@@ -110,9 +110,9 @@ public class HomeController {
     @RequestMapping(value = "/api/sendAgenda", method = RequestMethod.GET)
     public @ResponseBody String sendAgenda() {
         Agenda[] agendaOut = new Agenda[3];
-        agendaOut[0] = new Agenda("09:00",5, 3);
-        agendaOut[1] = new Agenda("10:00", 5, 3);
-        agendaOut[2] = new Agenda("11:00", 5, 3);
+        agendaOut[0] = new Agenda("09:00",5, "WebService");
+        agendaOut[1] = new Agenda("10:00", 5, "WebService");
+        agendaOut[2] = new Agenda("11:00", 5, "WebService");
         return new Gson().toJson(agendaOut);
     }
 
