@@ -8,6 +8,11 @@
  * @constructor
  */
 App.controller("productController", function($scope, $http) {
+    $http.get("/BO/api/appip").success(function(data) {
+        console.log(data);
+        $scope.data = data;
+    });
+
     $scope.callHandshake = function () {
         $http.get("/BO/api/handshake").success(function(data) {
             console.log(data);

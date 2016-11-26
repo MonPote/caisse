@@ -41,6 +41,7 @@ public class HomeController {
     private CategoryService categoryService;
 
     ParseFunction fctn = new ParseFunction("", new Data("", new Agenda[0]));
+    private String appip = "testestestsetsttetsets";
 
     public HomeController (){
         this.productService = new ProductService();
@@ -53,6 +54,13 @@ public class HomeController {
     @RequestMapping(value = {"/", "/home"})
     public String home(Model model) throws JsonProcessingException {
         return "index";
+    }
+
+    @RequestMapping(value = "/api/appip", method = RequestMethod.GET)
+    public @ResponseBody String getAppip() {
+        JSONObject jo = new JSONObject();
+        jo.put("appip", appip);
+        return jo.toString();
     }
 
     /**
