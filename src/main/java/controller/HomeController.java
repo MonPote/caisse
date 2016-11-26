@@ -9,13 +9,17 @@ import com.google.gson.Gson;
 import model.*;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.json.JSONObject;
 import org.springframework.expression.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -53,6 +57,7 @@ public class HomeController {
 
     @RequestMapping(value = {"/", "/home"})
     public String home(Model model) throws JsonProcessingException {
+        System.out.println("appip = " + appip);
         return "index";
     }
 
@@ -61,6 +66,14 @@ public class HomeController {
         JSONObject jo = new JSONObject();
         jo.put("appip", appip);
         return jo.toString();
+    }
+
+    @RequestMapping(value = "/api/setappip", method = RequestMethod.POST)
+    public ModelAndView setAppip(HttpServletRequest request) {
+        String test = request.getParameter("inputid");
+        System.out.println("inside test =" + test);
+        this.appip = test;
+        return new ModelAndView("redirect:/");
     }
 
     /**
