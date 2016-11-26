@@ -6,13 +6,16 @@ import Service.*;
 import Service.ServicesKit.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
+import model.*;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.springframework.expression.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -20,6 +23,8 @@ import java.net.URL;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
+import java.util.List;
 
 
 /**
@@ -29,7 +34,21 @@ import java.net.UnknownHostException;
 public class HomeController {
     static int instanceID = 44;
 
+    private ProductService productService;
+    private StoreService storeService;
+    private LocalizationService localizationService;
+    private BrandService brandService;
+    private CategoryService categoryService;
+
     ParseFunction fctn = new ParseFunction("", new Data("", new Agenda[0]));
+
+    public HomeController (){
+        this.productService = new ProductService();
+        this.storeService = new StoreService();
+        this.localizationService = new LocalizationService();
+        this.brandService = new BrandService();
+        this.categoryService = new CategoryService();
+    }
 
     @RequestMapping(value = {"/", "/home"})
     public String home(Model model) throws JsonProcessingException {
@@ -159,23 +178,161 @@ public class HomeController {
                 new StringEntity("data=" + data));
         return myHttpPost.execute();
     }
-    // requestMethod : "GET"
-// url exemple : "http://localhost:8080/"
-    private static String getReponse(final String urlToRead, String requestMethod) throws Exception {
-        StringBuilder result = new StringBuilder();
-        URL url = new URL(urlToRead);
-        HttpURLConnection conn;
-        conn = (HttpURLConnection)url.openConnection();
-        conn.setDoOutput(true);
-        conn.setRequestMethod(requestMethod);
-        conn.setRequestProperty( "Content-type", "application/x-www-form-urlencoded");
-        conn.setRequestProperty( "Accept", "*/*" );
-        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-        String line;
-        while ((line = rd.readLine()) != null) {
-            result.append(line);
+
+    @RequestMapping(value = "/testService")
+    public @ResponseBody String testService(HttpServletRequest request) throws IOException {
+        String target = "BO";
+        TrueData trueData = new TrueData("toto");
+        String data = new Gson().toJson(new Message("BO", 44, trueData));
+        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://localhost:8000/api/service?fct=WebService&target=BO&targetInstance=44"),
+                new StringEntity("data=" + data));
+        return myHttpPost.execute();
+    }
+
+
+    /**
+     * TEST SECTION
+     */
+    @RequestMapping(value = "/product/layout", method = RequestMethod.GET)
+    public String productLayout(ModelMap model, HttpSession session) {
+        return "index";
+    }
+
+    @RequestMapping("/productList.json")
+    public @ResponseBody String getProductList() {
+        List<ProductEntity> list = productService.listProducts();
+        int t = list.size();
+        for (ProductEntity p : list) {
+            p.setBrand(null);
+            p.setCategory(null);
+            p.setLocalization(null);
+            p.setStore(null);
         }
-        rd.close();
-        return result.toString();
+        return new Gson().toJson(list);
+    }
+
+    @RequestMapping("/brandList.json")
+    public @ResponseBody String getBrandList() {
+        List<BrandEntity> list = brandService.listBrands();
+        int t = list.size();
+        return new Gson().toJson(list);
+    }
+
+    @RequestMapping("/categoryList.json")
+    public @ResponseBody String getCategoryList() {
+        List<CategoryEntity> list = categoryService.listCategories();
+        int t = list.size();
+        return new Gson().toJson(list);
+    }
+
+    @RequestMapping("/storeList.json")
+    public @ResponseBody String getStoreList() {
+        List<StoreEntity> list = storeService.listStores();
+        int t = list.size();
+        return new Gson().toJson(list);
+    }
+
+    @RequestMapping("/localizationList.json")
+    public @ResponseBody String getLocalizationList() {
+        List<LocalizationEntity> list = localizationService.listLocalizations();
+        int t = list.size();
+        return new Gson().toJson(list);
+    }
+
+    @RequestMapping(value = "/addProduct/{id}", method = RequestMethod.POST)
+    public @ResponseBody void addProduct(@PathVariable("id") String id) {
+        ProductEntity productEntity = new ProductEntity();
+        productEntity.setReference(id);
+        productEntity.setId(productService.listProducts().size() + 1);
+        productEntity.setDesignation("test");
+        productEntity.setQuantity(10);
+        productEntity.setStore(storeService.listStores().get(0));
+        productEntity.setBrand(brandService.listBrands().get(0));
+        productEntity.setCategory(categoryService.listCategories().get(0));
+        productEntity.setLocalization(localizationService.listLocalizations().get(0));
+        try {
+            productService.addProduct(productEntity);
+        }
+        catch (Exception e) {
+        }
+    }
+
+    @RequestMapping(value = "/removeProduct/{id}", method = RequestMethod.DELETE)
+    public @ResponseBody void removeProduct(@PathVariable("id") String id) {
+        ProductEntity productEntity = productService.listProductsById(Integer.parseInt(id)).get(0);
+        try {
+            productService.removeProduct(productEntity);
+        }
+        catch (Exception e) {
+        }
+    }
+
+    @RequestMapping(value = "/addStore/{id}", method = RequestMethod.POST)
+    public @ResponseBody void addStore(@PathVariable("id") String id) {
+        StoreEntity storeEntity = new StoreEntity();
+        storeEntity.setName(id);
+        storeEntity.setId(storeService.listStores().size() + 1);
+        storeEntity.setAdress("rue test");
+        storeEntity.setZipcode("75000");
+        try {
+            storeService.addStore(storeEntity);
+        }
+        catch (Exception e) {
+        }
+    }
+
+    @RequestMapping(value = "/addLocalization/{id}", method = RequestMethod.POST)
+    public @ResponseBody void addLocalization(@PathVariable("id") String id) {
+        LocalizationEntity localizationEntity = new LocalizationEntity();
+        localizationEntity.setName(id);
+        localizationEntity.setId(localizationService.listLocalizations().size() + 1);
+        try {
+            localizationService.addLocalization(localizationEntity);
+        }
+        catch (Exception e) {
+        }
+    }
+
+    @RequestMapping(value = "/addBrand/{id}", method = RequestMethod.POST)
+    public @ResponseBody void addBrand(@PathVariable("id") String id) {
+        BrandEntity brandEntity = new BrandEntity();
+        brandEntity.setName(id);
+        brandEntity.setId(brandService.listBrands().size() + 1);
+        try {
+            brandService.addBrand(brandEntity);
+        }
+        catch (Exception e) {
+        }
+    }
+
+    @RequestMapping(value = "/addCategory/{id}", method = RequestMethod.POST)
+    public @ResponseBody void addCategory(@PathVariable("id") String id) {
+        CategoryEntity categoryEntity = new CategoryEntity();
+        categoryEntity.setName(id);
+        categoryEntity.setId(categoryService.listCategories().size() + 1);
+        try {
+            categoryService.addCategory(categoryEntity);
+        }
+        catch (Exception e) {
+        }
+    }
+
+    /**
+     * Function that will get every data from the database concerning the stock and return it
+     * @return json. The Json contain the stock data
+     */
+    public String generateStockJson() {
+        return getProductList();
+    }
+
+    @RequestMapping("404")
+    public String handlePageNotFound(ModelMap model) {
+        return "404";
+    }
+
+    public static String encode(String in) {
+        String out = in;
+        Charset.forName("UTF-8").encode(out);
+        return out;
     }
 }

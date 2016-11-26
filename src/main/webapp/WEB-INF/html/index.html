@@ -79,25 +79,228 @@
 
   <div class="row">
     <div class="col-lg-12">
-      <h3>Get message : toto</h3>
+      <h3>Test message to st</h3>
     </div>
     <div class="col-md-4"></div>
     <div class="input-append col-md-4">
-      <button class="btn btn-primary"  ng-click="getMessageGet()">Get Message : toto</button>
+      <button class="btn btn-primary"  ng-click="getMessageGet()">Test Message to ST</button>
     </div>
     <div class="col-md-4"></div>
   </div>
 
   <div class="row">
     <div class="col-lg-12">
-      <h3>Post message : toto</h3>
+      <h3>Test service with st</h3>
     </div>
     <div class="col-md-4"></div>
     <div class="input-append col-md-4">
-      <button class="btn btn-primary"  ng-click="getMessagePost()">Post Message : toto</button>
+      <button class="btn btn-primary"  ng-click="getMessagePost()">Test Service with st</button>
     </div>
     <div class="col-md-4"></div>
   </div>
+
+
+  <div class="row">
+    <div class="col-lg-12">
+      <h3>Test send file</h3>
+    </div>
+    <div class="col-md-4"></div>
+    <div class="input-append col-md-4">
+      <button class="btn btn-primary"  ng-click="getSendFile()">Test Send file</button>
+    </div>
+    <div class="col-md-4"></div>
+  </div>
+
+  <hr>
+  <div class="row">
+    <div class="col-lg-12">
+      <h3>Add Warhouse</h3>
+    </div>
+    <div class="input-append">
+      <input class="span2" type="text" ng-model="storeName" required="required" min="1" />
+      <button class="btn btn-primary" ng-disabled="!storeName" ng-click="addNewStore(storeName)">Add store</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <h3>Warhouses table</h3>
+    </div>
+  </div>
+  <!-- Page Features -->
+  <div class="row text-center">
+    <div class="alert alert-info" style="text-align: center" ng-show="warhouses.length == 0">
+      No products found !
+    </div>
+    <table class="table table-bordered" ng-show="warhouses.length > 0">
+      <thead>
+      <tr>
+        <th>id</th>
+        <th>name</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="x in warhouses">
+        <td>{{ x.id }}</td>
+        <td>{{ x.name }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <br />
+
+  <div class="row">
+    <div  class="col-lg-12">
+      <h3>Add Brand</h3>
+    </div>
+    <div class="input-append">
+      <input class="span2" type="text" ng-model="brandName" required="required" min="1" />
+      <button class="btn btn-primary" ng-disabled="!brandName" ng-click="addNewBrand(brandName)">Add brand</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <h3>Brands Table</h3>
+    </div>
+  </div>
+  <!-- Page Features -->
+  <div class="row text-center">
+    <div class="alert alert-info" style="text-align: center" ng-show="brands.length == 0">
+      No products found !
+    </div>
+    <table class="table table-bordered" ng-show="brands.length > 0">
+      <thead>
+      <tr>
+        <th>id</th>
+        <th>name</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="x in brands">
+        <td>{{ x.id }}</td>
+        <td>{{ x.name }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <br />
+
+  <div class="row">
+    <div  class="col-lg-12">
+      <h3>Add Category</h3>
+    </div>
+    <div class="input-append">
+      <input class="span2" type="text" ng-model="categoryName" required="required" min="1" />
+      <button class="btn btn-primary" ng-disabled="!categoryName" ng-click="addNewCategory(categoryName)">Add category</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <h3>Categories Table</h3>
+    </div>
+  </div>
+  <!-- Page Features -->
+  <div class="row text-center">
+    <div class="alert alert-info" style="text-align: center" ng-show="categories.length == 0">
+      No products found !
+    </div>
+    <table class="table table-bordered" ng-show="categories.length > 0">
+      <thead>
+      <tr>
+        <th>id</th>
+        <th>Name</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="x in categories">
+        <td>{{ x.id }}</td>
+        <td>{{ x.name }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <br />
+
+  <div class="row">
+    <div  class="col-lg-12">
+      <h3>Add Localization</h3>
+    </div>
+    <div class="input-append">
+      <input class="span2" type="text" ng-model="LocalizationName" required="required" min="1" />
+      <button class="btn btn-primary" ng-disabled="!LocalizationName" ng-click="addNewLocalization(LocalizationName)">Add localization</button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <h3>Localization Table</h3>
+    </div>
+  </div>
+  <!-- Page Features -->
+  <div class="row text-center">
+    <div class="alert alert-info" style="text-align: center" ng-show="localizations.length == 0">
+      No products found !
+    </div>
+    <table class="table table-bordered" ng-show="localizations.length > 0">
+      <thead>
+      <tr>
+        <th>id</th>
+        <th>name</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="x in localizations">
+        <td>{{ x.id }}</td>
+        <td>{{ x.name }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <br />
+
+  <div class="row">
+    <div  class="col-lg-12">
+      <h3>Add Product</h3>
+    </div>
+    <div class="input-append">
+      <input class="span2" type="text" ng-model="productRef" required="required" min="1" />
+      <button class="btn btn-primary" ng-disabled="!productRef" ng-click="addNewProduct(productRef)">Add product</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-lg-12">
+      <h3>Products Table</h3>
+    </div>
+  </div>
+  <!-- Page Features -->
+  <div class="row text-center">
+    <div class="alert alert-info" style="text-align: center" ng-show="products.length == 0">
+      No products found !
+    </div>
+    <table class="table table-bordered" ng-show="products.length > 0">
+      <thead>
+      <tr>
+        <th>id</th>
+        <th>Reference</th>
+        <th>Quantity</th>
+        <th>Designation</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr ng-repeat="x in products">
+        <td>{{ x.id }}</td>
+        <td>{{ x.reference }}</td>
+        <td>{{ x.quantity }}</td>
+        <td>{{ x.designation }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <br />
 
 <!-- /.row -->
 <!-- /Intro-->

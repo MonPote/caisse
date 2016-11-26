@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="2.0">
+    <persistence-unit name="Entrepot" transaction-type="RESOURCE_LOCAL">
+        <mapping-file>/src/main/resources/BrandEntity.xml</mapping-file>
+        <mapping-file>/src/main/resources/CategoryEntity.xml</mapping-file>
+        <mapping-file>/src/main/resources/LocalizationEntity.xml</mapping-file>
+        <mapping-file>/src/main/resources/ProductEntity.xml</mapping-file>
+        <mapping-file>/src/main/resources/StoreEntity.xml</mapping-file>
+        <properties>
+            <property name="javax.persistence.jdbc.driver" value="org.postgresql.Driver" />
+            <property name="javax.persistence.jdbc.url" value="jdbc:postgresql://192.168.0.150:5432/entrepot" />
+            <property name="javax.persistence.jdbc.user" value="ursi" />
+            <property name="javax.persistence.jdbc.password" value="password" />
+            <property name="hibernate.connection.url" value="jdbc:postgresql://192.168.0.150:5432/entrepot"/>
+            <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
+            <property name="hibernate.connection.username" value="ursi"/>
+            <property name="hibernate.connection.password" value="password"/>
+
+        </properties>
+
+    </persistence-unit>
+</persistence>

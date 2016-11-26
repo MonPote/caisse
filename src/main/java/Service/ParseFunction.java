@@ -1,5 +1,7 @@
 package Service;
 
+import Service.ServicesKit.TrueData;
+import Service.ServicesKit.WebService;
 import com.google.gson.Gson;
 import org.json.JSONObject;
 
@@ -47,11 +49,11 @@ public class ParseFunction {
                 String result = "it worked!";
                 Success test = new Success(message, result);
                 //String data = new Gson().toJson(test);
-                WebService self = new WebService(sender, 1, test);
+                WebService self = new WebService(sender, 1, new TrueData(new Gson().toJson(test)));
 
                 System.out.println("WebService with toto called: " + self.toString());
 
-                return self;
+                return new Gson().toJson(self);
             }
 
             default: {
