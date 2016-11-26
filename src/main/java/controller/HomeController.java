@@ -16,15 +16,9 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpServletResponse;
-
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
@@ -43,16 +37,17 @@ public class HomeController {
     private LocalizationService localizationService;
     private BrandService brandService;
     private CategoryService categoryService;
-
-    ParseFunction fctn = new ParseFunction("", new Data("", new Agenda[0]));
+    private ParseFunction fctn = null;
     private String appip = null;
 
-    public HomeController (){
+    public HomeController() {
         this.productService = new ProductService();
         this.storeService = new StoreService();
         this.localizationService = new LocalizationService();
         this.brandService = new BrandService();
         this.categoryService = new CategoryService();
+
+        this.fctn = new ParseFunction("", new Data("", new Agenda[0]));
     }
 
     @RequestMapping(value = {"/", "/home"})
@@ -112,7 +107,7 @@ public class HomeController {
         agendaOut[0] = new Agenda("09:00",5, "WebService");
         agendaOut[1] = new Agenda("10:00", 5, "WebService");
         agendaOut[2] = new Agenda("11:00", 5, "WebService");
-        Handshake handOut = Handshake.getInstance(senderOut, instanceOut, addressOut, agendaOut);
+        Handshake handOut = Handshake.getInstance(senderOut, instanceOut, this.appip, agendaOut);
 
         /**
          * Running the post method to send the data to the st
