@@ -1,7 +1,5 @@
 package controller;
 
-
-
 import Service.*;
 import Service.ServicesKit.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -51,23 +49,20 @@ public class HomeController {
     }
 
     @RequestMapping(value = {"/", "/home"})
-    public String home(Model model) throws JsonProcessingException {
-        System.out.println("appip = " + appip);
+    public String home() {
         return "index";
     }
 
     @RequestMapping(value = "/api/appip", method = RequestMethod.GET)
-    public @ResponseBody String getAppip() {
+    public @ResponseBody String getAppIp() {
         JSONObject jo = new JSONObject();
         jo.put("appip", appip);
         return jo.toString();
     }
 
     @RequestMapping(value = "/api/setappip", method = RequestMethod.POST)
-    public ModelAndView setAppip(HttpServletRequest request) {
-        String test = request.getParameter("inputid");
-        System.out.println("inside test =" + test);
-        this.appip = test;
+    public ModelAndView setAppIp(HttpServletRequest request) {
+        this.appip = request.getParameter("inputid");
         return new ModelAndView("redirect:/");
     }
 
