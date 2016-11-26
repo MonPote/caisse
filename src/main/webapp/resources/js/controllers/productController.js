@@ -10,7 +10,7 @@
 App.controller("productController", function($scope, $http) {
     $http.get("/BO/api/appip").success(function(data) {
         console.log(data);
-        $scope.data = data;
+        $scope.appip = data.appip;
     });
 
     $scope.callHandshake = function () {

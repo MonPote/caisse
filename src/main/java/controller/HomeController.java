@@ -41,7 +41,7 @@ public class HomeController {
     private CategoryService categoryService;
 
     ParseFunction fctn = new ParseFunction("", new Data("", new Agenda[0]));
-    private String appip = "testestestsetsttetsets";
+    private String appip = null;
 
     public HomeController (){
         this.productService = new ProductService();
