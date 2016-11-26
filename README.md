@@ -6,6 +6,9 @@
   - ghirig_s (Sikred)
   - claebo_c
   - lasne_g
+  - capes_h
+  - lebrun_x
+
 
 ### Description
 The goal of this project is to create a commun base for every java applications for USRI
