@@ -47,6 +47,19 @@ public class ParseFunction {
                 return self;
             }
 
+            case "toto": {
+                String sender = "back_office";
+                String message = "test back_office";
+                String result = "it worked!";
+                Success test = new Success(message, result);
+                //String data = new Gson().toJson(test);
+                WebService self = new WebService(sender, 1, test);
+
+                System.out.println("WebService with toto called: " + self.toString());
+
+                return self;
+            }
+
             default: {
                 System.out.println("Unknown function: " + fct);
                 break;
