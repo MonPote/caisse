@@ -107,7 +107,7 @@ public class HomeController {
         /**
          * Running the post method to send the data to the st
          */
-        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://localhost:8000/api/handshake"),
+        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://192.168.0.151/api/handshake"),
                 new StringEntity("data=" + new Gson().toJson(handOut)));
 
         return myHttpPost.execute();
@@ -185,7 +185,7 @@ public class HomeController {
         String target = "BO";
         TrueData trueData = new TrueData("toto");
         String data = new Gson().toJson(new Message("BO", 44, trueData));
-        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://localhost:8000/api/msg?fct=WebService&target=BO&targetInstance=44"),
+        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://192.168.0.151/api/msg?fct=WebService&target=BO&targetInstance=44"),
                 new StringEntity("data=" + data));
         return myHttpPost.execute();
     }
@@ -195,7 +195,7 @@ public class HomeController {
         String target = "BO";
         TrueData trueData = new TrueData("toto");
         String data = new Gson().toJson(new Message("BO", 44, trueData));
-        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://localhost:8000/api/service?fct=WebService&target=BO&targetInstance=44"),
+        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://192.168.0.151/api/service?fct=WebService&target=BO&targetInstance=44"),
                 new StringEntity("data=" + data));
         return myHttpPost.execute();
     }
