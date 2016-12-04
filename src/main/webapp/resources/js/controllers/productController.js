@@ -8,7 +8,7 @@
  * @constructor
  */
 App.controller("productController", function($scope, $http) {
-    $http.get("/BO/api/appip").success(function(data) {
+    $http.get("/BO/api/getIp").success(function(data) {
         console.log('dataip = ', data.appip);
         $scope.model = data;
     });
@@ -16,14 +16,6 @@ App.controller("productController", function($scope, $http) {
     $scope.callHandshake = function () {
         $http.get("/BO/api/handshake").success(function(data) {
             console.log(data);
-        });
-    };
-
-    $scope.sendAgenda = function () {
-        $http.get("/BO/api/sendAgenda").success(function(data) {
-            console.log("data = ", data);
-            $http.post("http://st/api/send_agenda", data).success(function () {
-            });
         });
     };
 

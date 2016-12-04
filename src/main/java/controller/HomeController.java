@@ -28,7 +28,10 @@ import java.util.List;
  */
 @Controller
 public class HomeController {
-    static int instanceID = 44;
+    private int instanceID = 44;
+    private String appName = "BO";
+    private String appip = null;
+    private String stip = null;
 
     private ProductService productService;
     private StoreService storeService;
@@ -36,7 +39,7 @@ public class HomeController {
     private BrandService brandService;
     private CategoryService categoryService;
     private ParseFunction fctn = null;
-    private String appip = null;
+
 
     public HomeController() {
         this.productService = new ProductService();
@@ -53,16 +56,37 @@ public class HomeController {
         return "index";
     }
 
-    @RequestMapping(value = "/api/appip", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/getIp", method = RequestMethod.GET)
     public @ResponseBody String getAppIp() {
         JSONObject jo = new JSONObject();
+        jo.put("appName", this.appName);
         jo.put("appip", appip);
+        jo.put("stip", stip);
+        jo.put("instanceId", instanceID);
         return jo.toString();
+    }
+
+    @RequestMapping(value = "/api/setappname", method = RequestMethod.POST)
+    public ModelAndView setAppName(HttpServletRequest request) {
+        this.appName = request.getParameter("inputappname");
+        return new ModelAndView("redirect:/");
     }
 
     @RequestMapping(value = "/api/setappip", method = RequestMethod.POST)
     public ModelAndView setAppIp(HttpServletRequest request) {
         this.appip = request.getParameter("inputid");
+        return new ModelAndView("redirect:/");
+    }
+
+    @RequestMapping(value = "/api/setstip", method = RequestMethod.POST)
+    public ModelAndView setStIp(HttpServletRequest request) {
+        this.stip = request.getParameter("inputstid");
+        return new ModelAndView("redirect:/");
+    }
+
+    @RequestMapping(value = "/api/setinstanceid", method = RequestMethod.POST)
+    public ModelAndView setInstandeId(HttpServletRequest request) {
+        this.instanceID = Integer.parseInt(request.getParameter("inputinstanceid"));
         return new ModelAndView("redirect:/");
     }
 
@@ -79,22 +103,6 @@ public class HomeController {
             senderOut = "BO";
         }
 
-        int instanceOut = instanceID;
-
-        /**
-         * Get the ip adress of the current host
-         */
-        String addressMix = null;
-        InetAddress ip = null;
-        try {
-            ip = InetAddress.getLocalHost();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        addressMix = ip.toString();
-        String[] parts = addressMix.split("/");
-        String addressOut = parts[parts.length - 1];
-
         /**
          * Creating the agenda
          */
@@ -102,28 +110,15 @@ public class HomeController {
         agendaOut[0] = new Agenda("09:00",5, "WebService");
         agendaOut[1] = new Agenda("10:00", 5, "WebService");
         agendaOut[2] = new Agenda("11:00", 5, "WebService");
-        Handshake handOut = Handshake.getInstance(senderOut, instanceOut, this.appip, agendaOut);
+        Handshake handOut = Handshake.getInstance(this.appName, this.instanceID, this.appip, agendaOut);
 
         /**
          * Running the post method to send the data to the st
          */
-        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://192.168.0.151/api/handshake"),
+        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/handshake"),
                 new StringEntity("data=" + new Gson().toJson(handOut)));
 
         return myHttpPost.execute();
-    }
-
-    /**
-     * Send Agenda function
-     * @return
-     */
-    @RequestMapping(value = "/api/sendAgenda", method = RequestMethod.GET)
-    public @ResponseBody String sendAgenda() {
-        Agenda[] agendaOut = new Agenda[3];
-        agendaOut[0] = new Agenda("09:00",5, "WebService");
-        agendaOut[1] = new Agenda("10:00", 5, "WebService");
-        agendaOut[2] = new Agenda("11:00", 5, "WebService");
-        return new Gson().toJson(agendaOut);
     }
 
     /**
@@ -139,6 +134,19 @@ public class HomeController {
                                               HttpServletRequest request)
             throws ParseException {
         System.out.println("Messages !!!!");
+        fctn.setFct(fct);
+        WebService result = new WebService(this.instanceID);
+        result.senderSet(sender);
+        result.dataSet(new TrueData(fctn.execute()));
+        return new Gson().toJson(result);
+    }
+
+    @RequestMapping(value = "/api/service", method = RequestMethod.GET)
+    public @ResponseBody String getServiceGET(@RequestParam(required = true, value = "fct", defaultValue = "") String fct,
+                                              @RequestParam(required = true, value = "sender", defaultValue = "") String sender,
+                                              HttpServletRequest request)
+            throws ParseException {
+        System.out.println("Service !!!!");
         fctn.setFct(fct);
         WebService result = new WebService(this.instanceID);
         result.senderSet(sender);
@@ -164,7 +172,7 @@ public class HomeController {
     public @ResponseBody String sendFile(@RequestParam(required = true, value = "fct", defaultValue = "") String fct, HttpServletRequest request) throws IOException {
         SendFile target = new SendFile(instanceID, "test", "BO");
         String fileLocation = "myfile";
-        MyHttpPostFile myHttpPostFile = new MyHttpPostFile(new HttpPost("http://192.168.0.151/send_file"),
+        MyHttpPostFile myHttpPostFile = new MyHttpPostFile(new HttpPost("http://" + this.stip + "/send_file"),
                 new StringEntity("data=" + new Gson().toJson(target)), new File(fileLocation));
 
         return myHttpPostFile.execute();
@@ -175,27 +183,25 @@ public class HomeController {
                                         @RequestParam(value = "fileID", defaultValue = "") String fileId,
                                         HttpServletRequest request) throws IOException {
         String target = "BO";
-        MyHttpGetFile myHttpGetFile = new MyHttpGetFile("http://192.168.0.151/get_file?target=" + target
+        MyHttpGetFile myHttpGetFile = new MyHttpGetFile("http://" + this.stip + "/get_file?target=" + target
                 + "&fct=" + fct + "&instance=" + this.instanceID + "&fielid=" + fileId, "");
         return myHttpGetFile.execute();
     }
 
     @RequestMapping(value = "/testMsg")
     public @ResponseBody String testSendMessage(HttpServletRequest request) throws IOException {
-        String target = "BO";
         TrueData trueData = new TrueData("toto");
-        String data = new Gson().toJson(new Message("BO", 44, trueData));
-        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://192.168.0.151/api/msg?fct=WebService&target=BO&targetInstance=44"),
+        String data = new Gson().toJson(new Message(this.appName, this.instanceID, trueData));
+        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/msg?fct=WebService&target=" + this.appName +"&targetInstance=" + this.instanceID + ""),
                 new StringEntity("data=" + data));
         return myHttpPost.execute();
     }
 
     @RequestMapping(value = "/testService")
     public @ResponseBody String testService(HttpServletRequest request) throws IOException {
-        String target = "BO";
         TrueData trueData = new TrueData("toto");
-        String data = new Gson().toJson(new Message("BO", 44, trueData));
-        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://192.168.0.151/api/service?fct=WebService&target=BO&targetInstance=44"),
+        String data = new Gson().toJson(new Message(this.appName, this.instanceID, trueData));
+        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/service?fct=WebService&target=" + this.appName + "&targetInstance=" + this.instanceID + ""),
                 new StringEntity("data=" + data));
         return myHttpPost.execute();
     }
