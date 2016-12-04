@@ -2,7 +2,6 @@ package controller;
 
 import Service.*;
 import Service.ServicesKit.*;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import model.*;
 import org.apache.http.client.methods.HttpPost;
@@ -10,16 +9,15 @@ import org.apache.http.entity.StringEntity;
 import org.json.JSONObject;
 import org.springframework.expression.ParseException;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.*;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.List;
 
 
@@ -122,28 +120,37 @@ public class HomeController {
     }
 
     /**
-     * Get the name of the function to call (WebService)
+     * Get the message and send a response
      * @param fct
      * @param request
+     * @param instanceID
      * @return
      * @throws ParseException
      */
     @RequestMapping(value = "/api/msg", method = RequestMethod.GET)
     public @ResponseBody String getMessageGET(@RequestParam(required = true, value = "fct", defaultValue = "") String fct,
                                               @RequestParam(required = true, value = "sender", defaultValue = "") String sender,
+                                              @RequestParam(required = true, value = "instanceID", defaultValue = "")String instanceID,
                                               HttpServletRequest request)
             throws ParseException {
         System.out.println("Messages !!!!");
-        fctn.setFct(fct);
-        WebService result = new WebService(this.instanceID);
-        result.senderSet(sender);
-        result.dataSet(new TrueData(fctn.execute()));
-        return new Gson().toJson(result);
+        Response response = new Response(true, "Every thing works !");
+        return "data=" + new Gson().toJson(response);
     }
 
+    /**
+     * Get the service and send the result to the st
+     * @param fct
+     * @param sender
+     * @param instanceID
+     * @param request
+     * @return
+     * @throws ParseException
+     */
     @RequestMapping(value = "/api/service", method = RequestMethod.GET)
     public @ResponseBody String getServiceGET(@RequestParam(required = true, value = "fct", defaultValue = "") String fct,
                                               @RequestParam(required = true, value = "sender", defaultValue = "") String sender,
+                                              @RequestParam(required = true, value = "instanceID", defaultValue = "")String instanceID,
                                               HttpServletRequest request)
             throws ParseException {
         System.out.println("Service !!!!");
@@ -155,38 +162,65 @@ public class HomeController {
     }
 
     /**
-     * Unused Function
-     * @param data
+     * Send file to the st
+     * @param targetName
+     * @param targetInstance
+     * @param fctName
      * @return
-     * @throws ParseException
+     * @throws IOException
      */
-    @RequestMapping(value = "/api/msg", method = RequestMethod.POST)
-    public @ResponseBody String getMessagePOST(@RequestParam(required = true, value = "data", defaultValue = "") String data)
-            throws ParseException {
-        System.out.println("/api/msg/post: " + data.toString());
+    public @ResponseBody String sendFile(String targetName, String targetInstance, String fctName) throws IOException {
+        SendFile target = new SendFile(instanceID, "test", "BO");
+        File fileLocation = new File("myfile"); /* FIXME */
+        MyHttpPostFile myHttpPostFile = new MyHttpPostFile(new HttpPost("http://" + this.stip + "/send_file?fct="
+                + fctName + "&target=" + targetName + "&targetInstance=" + targetInstance + ""),
+                new StringEntity("data=" + new Gson().toJson(target)), fileLocation);
+        return myHttpPostFile.execute();
+    }
+
+    /**
+     * Get file from st and store it into the application
+     * @param fct
+     * @param app
+     * @param file
+     * @param request
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping(value = "/notif_file", method = RequestMethod.GET)
+    public @ResponseBody String notifFile(@RequestParam(required = true, value = "fct", defaultValue = "") String fct,
+                                        @RequestParam(value = "sender", defaultValue = "") String app,
+                                        @RequestParam(value = "targetInstance", defaultValue = "") String targetInstance,
+                                        @RequestParam(value = "fileID", defaultValue = "") MultipartFile file,
+                                        HttpServletRequest request) throws IOException {
+        System.out.println("notif File !!!!");
+        MyHttpGetFile myHttpGetFile = new MyHttpGetFile("http://" + this.stip + "/get_file?target=" + app
+                + "&instance=" + targetInstance + "&fielid=" + file, "");
+        String result = myHttpGetFile.execute();
+        getFile(file, result, targetInstance);
         Response response = new Response(true, "Every thing works !");
         return "data=" + new Gson().toJson(response);
     }
 
-    @RequestMapping(value = "/sendFile", method = RequestMethod.GET)
-    public @ResponseBody String sendFile(@RequestParam(required = true, value = "fct", defaultValue = "") String fct, HttpServletRequest request) throws IOException {
-        SendFile target = new SendFile(instanceID, "test", "BO");
-        String fileLocation = "myfile";
-        MyHttpPostFile myHttpPostFile = new MyHttpPostFile(new HttpPost("http://" + this.stip + "/send_file"),
-                new StringEntity("data=" + new Gson().toJson(target)), new File(fileLocation));
-
-        return myHttpPostFile.execute();
+    /**
+     * Function that store the receptioned file
+     * @param file
+     * @param content
+     * @param targetInstance
+     * @return
+     * @throws IOException
+     */
+    public String getFile(MultipartFile file, String content, String targetInstance) throws IOException {
+        System.out.println("getFile !!!!");
+        FileHandler fileHandler = new FileHandler(file);
+        fileHandler.store(file, targetInstance);
+        Response response = new Response(true, "Every thing works !");
+        return "data=" + new Gson().toJson(response);
     }
 
-    @RequestMapping(value = "/notif_file", method = RequestMethod.GET)
-    public @ResponseBody String getFile(@RequestParam(required = true, value = "fct", defaultValue = "") String fct,
-                                        @RequestParam(value = "fileID", defaultValue = "") String fileId,
-                                        HttpServletRequest request) throws IOException {
-        String target = "BO";
-        MyHttpGetFile myHttpGetFile = new MyHttpGetFile("http://" + this.stip + "/get_file?target=" + target
-                + "&fct=" + fct + "&instance=" + this.instanceID + "&fielid=" + fileId, "");
-        return myHttpGetFile.execute();
-    }
+    /*
+        TEST PART
+     */
 
     @RequestMapping(value = "/testMsg")
     public @ResponseBody String testSendMessage(HttpServletRequest request) throws IOException {
@@ -204,6 +238,18 @@ public class HomeController {
         MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/service?fct=WebService&target=" + this.appName + "&targetInstance=" + this.instanceID + ""),
                 new StringEntity("data=" + data));
         return myHttpPost.execute();
+    }
+
+    @RequestMapping(value = "/testFile")
+    public @ResponseBody String testSendFile() throws IOException {
+        String fctName = "test";
+        String targetName = this.appName;
+        String targetInstance = Integer.toString(this.instanceID);
+        SendFile target = new SendFile(instanceID, fctName, this.appName);
+        File fileLocation = new File("upload-dir/hello.txt");
+        MyHttpPostFile myHttpPostFile = new MyHttpPostFile(new HttpPost("http://" + this.stip + "/send_file?fct=" + fctName + "&target=" + targetName + "&targetInstance=" + targetInstance + ""),
+                new StringEntity("data=" + new Gson().toJson(target)), fileLocation);
+        return myHttpPostFile.execute();
     }
 
 
