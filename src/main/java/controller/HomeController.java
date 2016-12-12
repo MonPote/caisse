@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import model.*;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.expression.ParseException;
 import org.springframework.stereotype.Controller;
@@ -108,7 +109,7 @@ public class HomeController {
         agendaOut[0] = new Agenda("09:00",5, "WebService");
         agendaOut[1] = new Agenda("10:00", 5, "WebService");
         agendaOut[2] = new Agenda("11:00", 5, "WebService");
-        Handshake handOut = Handshake.getInstance(this.appName, this.instanceID, this.appip, agendaOut);
+        Handshake handOut = new Handshake(this.appName, this.instanceID, this.appip, agendaOut);
 
         /**
          * Running the post method to send the data to the st
@@ -123,17 +124,16 @@ public class HomeController {
      * Get the message and send a response
      * @param fct
      * @param request
-     * @param instanceID
      * @return
      * @throws ParseException
      */
-    @RequestMapping(value = "/api/msg", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/msg", method = RequestMethod.POST)
     public @ResponseBody String getMessageGET(@RequestParam(required = true, value = "fct", defaultValue = "") String fct,
-                                              @RequestParam(required = true, value = "sender", defaultValue = "") String sender,
-                                              @RequestParam(required = true, value = "instanceID", defaultValue = "")String instanceID,
+                                              @RequestParam(required = true, value = "data", defaultValue = "") String data,
                                               HttpServletRequest request)
             throws ParseException {
         System.out.println("Messages !!!!");
+        System.out.println(data);
         Response response = new Response(true, "Every thing works !");
         return "data=" + new Gson().toJson(response);
     }
@@ -141,22 +141,20 @@ public class HomeController {
     /**
      * Get the service and send the result to the st
      * @param fct
-     * @param sender
-     * @param instanceID
      * @param request
      * @return
      * @throws ParseException
      */
-    @RequestMapping(value = "/api/service", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/service", method = RequestMethod.POST)
     public @ResponseBody String getServiceGET(@RequestParam(required = true, value = "fct", defaultValue = "") String fct,
-                                              @RequestParam(required = true, value = "sender", defaultValue = "") String sender,
-                                              @RequestParam(required = true, value = "instanceID", defaultValue = "")String instanceID,
+                                              @RequestParam(required = true, value = "data", defaultValue = "") String data,
                                               HttpServletRequest request)
             throws ParseException {
         System.out.println("Service !!!!");
         fctn.setFct(fct);
+        System.out.println(data);
         WebService result = new WebService(this.instanceID);
-        result.senderSet(sender);
+        result.senderSet("toto");
         result.dataSet(new TrueData(fctn.execute()));
         return new Gson().toJson(result);
     }
