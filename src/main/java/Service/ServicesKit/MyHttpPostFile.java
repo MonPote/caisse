@@ -47,6 +47,13 @@ public class MyHttpPostFile {
         HttpClient httpClient = HttpClientBuilder.create().build();
 
         /**
+         * Cresting the json containing
+         */
+        httpPost.addHeader("content-type", "application/x-www-form-urlencoded");
+        httpPost.addHeader("Accept","application/json");
+        httpPost.setEntity(stringEntity);
+
+        /**
          * Creating the httpClient for the post request
          */
         HttpEntity entity = MultipartEntityBuilder.create()
