@@ -57,7 +57,7 @@ public class MyHttpPostFile {
          * Creating the httpClient for the post request
          */
         HttpEntity entity = MultipartEntityBuilder.create()
-                .addBinaryBody("file", file, ContentType.create("application/json"), file.getName())
+                .addBinaryBody("file", file, ContentType.create("multipart/form-data"), file.getName())
                 .build();
         httpPost.setEntity(entity);
 
