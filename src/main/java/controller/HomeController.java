@@ -246,7 +246,7 @@ public class HomeController {
         String targetInstance = Integer.toString(this.instanceID);
         SendFile target = new SendFile(instanceID, fctName, this.appName);
         File fileLocation = new File("/project/upload-dir/hello.txt");
-        MyHttpPostFile myHttpPostFile = new MyHttpPostFile(new HttpPost("http://" + this.stip + "/send_file?fct=" + fctName + "&target=" + targetName + "&targetInstance=" + targetInstance + ""),
+        MyHttpPostFile myHttpPostFile = new MyHttpPostFile(new HttpPost("http://" + this.stip + "/api/send_file?fct=" + fctName + "&target=" + targetName + "&targetInstance=" + targetInstance + ""),
                 new StringEntity("data=" + new Gson().toJson(target)), fileLocation);
         return myHttpPostFile.execute();
     }
