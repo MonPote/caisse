@@ -7,7 +7,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.FileEntity;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 
@@ -53,11 +55,13 @@ public class MyHttpPostFile {
         httpPost.addHeader("Accept","application/json");
         httpPost.setEntity(stringEntity);
 
+        FileBody uploadFilePart = new FileBody(file);
+
         /**
          * Creating the httpClient for the post request
          */
         HttpEntity entity = MultipartEntityBuilder.create()
-                .addBinaryBody("file", file, ContentType.create("multipart/form-data"), file.getName())
+                .addPart("file", uploadFilePart)
                 .build();
         httpPost.setEntity(entity);
 
