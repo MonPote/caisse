@@ -1,6 +1,7 @@
 FROM neaftw/ursi-java:1.0
 
 COPY src/ /project/src/
+COPY upload-dir/ /project/upload-dir/
 COPY pom.xml /project/
 
 

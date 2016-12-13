@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 
@@ -244,147 +245,25 @@ public class HomeController {
         String targetName = this.appName;
         String targetInstance = Integer.toString(this.instanceID);
         SendFile target = new SendFile(instanceID, fctName, this.appName);
-        File fileLocation = new File("upload-dir/hello.txt");
+        File fileLocation = new File("/project/upload-dir/hello.txt");
         MyHttpPostFile myHttpPostFile = new MyHttpPostFile(new HttpPost("http://" + this.stip + "/send_file?fct=" + fctName + "&target=" + targetName + "&targetInstance=" + targetInstance + ""),
                 new StringEntity("data=" + new Gson().toJson(target)), fileLocation);
         return myHttpPostFile.execute();
     }
 
-
-    /**
-     * TEST SECTION
-     */
-    @RequestMapping(value = "/product/layout", method = RequestMethod.GET)
-    public String productLayout(ModelMap model, HttpSession session) {
-        return "index";
+    @RequestMapping(value = "/checkFile")
+    public @ResponseBody String checkFile() throws IOException {
+        File fileLocation = new File("/project/upload-dir/hello.txt");
+        File dir = new File("/project");
+        File[] filesList = dir.listFiles();
+        for (File file : filesList) {
+            if (file.isDirectory()) {
+                System.out.println(file.getName());
+            }
+        }
+        return "{result : " + fileLocation.isFile() + " }";
     }
 
-    @RequestMapping("/productList.json")
-    public @ResponseBody String getProductList() {
-        List<ProductEntity> list = productService.listProducts();
-        int t = list.size();
-        for (ProductEntity p : list) {
-            p.setBrand(null);
-            p.setCategory(null);
-            p.setLocalization(null);
-            p.setStore(null);
-        }
-        return new Gson().toJson(list);
-    }
-
-    @RequestMapping("/brandList.json")
-    public @ResponseBody String getBrandList() {
-        List<BrandEntity> list = brandService.listBrands();
-        int t = list.size();
-        return new Gson().toJson(list);
-    }
-
-    @RequestMapping("/categoryList.json")
-    public @ResponseBody String getCategoryList() {
-        List<CategoryEntity> list = categoryService.listCategories();
-        int t = list.size();
-        return new Gson().toJson(list);
-    }
-
-    @RequestMapping("/storeList.json")
-    public @ResponseBody String getStoreList() {
-        List<StoreEntity> list = storeService.listStores();
-        int t = list.size();
-        return new Gson().toJson(list);
-    }
-
-    @RequestMapping("/localizationList.json")
-    public @ResponseBody String getLocalizationList() {
-        List<LocalizationEntity> list = localizationService.listLocalizations();
-        int t = list.size();
-        return new Gson().toJson(list);
-    }
-
-    @RequestMapping(value = "/addProduct/{id}", method = RequestMethod.POST)
-    public @ResponseBody void addProduct(@PathVariable("id") String id) {
-        ProductEntity productEntity = new ProductEntity();
-        productEntity.setReference(id);
-        productEntity.setId(productService.listProducts().size() + 1);
-        productEntity.setDesignation("test");
-        productEntity.setQuantity(10);
-        productEntity.setStore(storeService.listStores().get(0));
-        productEntity.setBrand(brandService.listBrands().get(0));
-        productEntity.setCategory(categoryService.listCategories().get(0));
-        productEntity.setLocalization(localizationService.listLocalizations().get(0));
-        try {
-            productService.addProduct(productEntity);
-        }
-        catch (Exception e) {
-        }
-    }
-
-    @RequestMapping(value = "/removeProduct/{id}", method = RequestMethod.DELETE)
-    public @ResponseBody void removeProduct(@PathVariable("id") String id) {
-        ProductEntity productEntity = productService.listProductsById(Integer.parseInt(id)).get(0);
-        try {
-            productService.removeProduct(productEntity);
-        }
-        catch (Exception e) {
-        }
-    }
-
-    @RequestMapping(value = "/addStore/{id}", method = RequestMethod.POST)
-    public @ResponseBody void addStore(@PathVariable("id") String id) {
-        StoreEntity storeEntity = new StoreEntity();
-        storeEntity.setName(id);
-        storeEntity.setId(storeService.listStores().size() + 1);
-        storeEntity.setAdress("rue test");
-        storeEntity.setZipcode("75000");
-        try {
-            storeService.addStore(storeEntity);
-        }
-        catch (Exception e) {
-        }
-    }
-
-    @RequestMapping(value = "/addLocalization/{id}", method = RequestMethod.POST)
-    public @ResponseBody void addLocalization(@PathVariable("id") String id) {
-        LocalizationEntity localizationEntity = new LocalizationEntity();
-        localizationEntity.setName(id);
-        localizationEntity.setId(localizationService.listLocalizations().size() + 1);
-        try {
-            localizationService.addLocalization(localizationEntity);
-        }
-        catch (Exception e) {
-        }
-    }
-
-    @RequestMapping(value = "/addBrand/{id}", method = RequestMethod.POST)
-    public @ResponseBody void addBrand(@PathVariable("id") String id) {
-        BrandEntity brandEntity = new BrandEntity();
-        brandEntity.setName(id);
-        brandEntity.setId(brandService.listBrands().size() + 1);
-        try {
-            brandService.addBrand(brandEntity);
-        }
-        catch (Exception e) {
-        }
-    }
-
-    @RequestMapping(value = "/addCategory/{id}", method = RequestMethod.POST)
-    public @ResponseBody void addCategory(@PathVariable("id") String id) {
-        CategoryEntity categoryEntity = new CategoryEntity();
-        categoryEntity.setName(id);
-        categoryEntity.setId(categoryService.listCategories().size() + 1);
-        try {
-            categoryService.addCategory(categoryEntity);
-        }
-        catch (Exception e) {
-        }
-    }
-
-    /**
-     * Function that will get every data from the database concerning the stock and return it
-     * @return json. The Json contain the stock data
-     */
-    public String generateStockJson() {
-        return getProductList();
-    }
 
     @RequestMapping("404")
     public String handlePageNotFound(ModelMap model) {
