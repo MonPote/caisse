@@ -51,7 +51,8 @@ public class MyHttpPostFile {
         /**
          * Cresting the json containing
          */
-        httpPost.addHeader("content-type", "application/x-www-form-urlencoded");
+
+        /*httpPost.addHeader("content-type", "undefined");*/
         httpPost.addHeader("Accept","application/json");
         httpPost.setEntity(stringEntity);
 

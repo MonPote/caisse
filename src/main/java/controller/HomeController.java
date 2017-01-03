@@ -241,10 +241,11 @@ public class HomeController {
 
     @RequestMapping(value = "/testFile")
     public @ResponseBody String testSendFile() throws IOException {
+        TrueData trueData = new TrueData("toto");
         String fctName = "test";
         String targetName = this.appName;
         String targetInstance = Integer.toString(this.instanceID);
-        SendFile target = new SendFile(instanceID, fctName, this.appName);
+        Message target = new Message(this.appName, this.instanceID, trueData);
         File fileLocation = new File("/project/upload-dir/hello.txt");
         MyHttpPostFile myHttpPostFile = new MyHttpPostFile(new HttpPost("http://" + this.stip + "/api/send_file?fct=" + fctName + "&target=" + targetName + "&targetInstance=" + targetInstance + ""),
                 new StringEntity("data=" + new Gson().toJson(target)), fileLocation);

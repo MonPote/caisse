@@ -19,7 +19,7 @@ import java.util.Date;
 
 public class FileHandler {
     private String filename = "";
-    private final String rootLocation = "src/upload-dir";
+    private final String rootLocation = "upload-dir";
 
     private String getDate() {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
