@@ -35,7 +35,7 @@ public class ParseFunction {
 
     public String execute() {
         switch (fct) {
-
+            /* SWITCH SUR LE NON DE LA FONCTION POUR EXECUTER LA BONNE FONCTION */
             case "WebService": {
                 String sender = "back_office";
                 String message = "test back_office";
@@ -55,6 +55,14 @@ public class ParseFunction {
 
                 return new Gson().toJson(self);
             }
+
+            /*
+            case "EN-GC1" :
+                String sender = "entrepot";
+                String message = MESSAGE
+                String result = "RESULTAT DE LA FONCTION LIE AU CASE"
+                return new Gson().toJson(self);
+             */
 
             default: {
                 System.out.println("Unknown function: " + fct);

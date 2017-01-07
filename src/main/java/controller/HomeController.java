@@ -135,7 +135,8 @@ public class HomeController {
             throws ParseException {
         System.out.println("Messages !!!!");
         System.out.println(data);
-        Response response = new Response(true, "Every thing works !");
+        /* FIXME TRAITEMENT DES DATAS DES MESSAGES VIA PARSEFUNCTION */
+        Response response = new Response(true, "Every thing works !" /* FIXME REMPLACER EN FONCTION DE LA REUSSITE OU NON DE L EXECUTION DE LA FONCTION*/);
         return "data=" + new Gson().toJson(response);
     }
 
@@ -152,10 +153,14 @@ public class HomeController {
                                               HttpServletRequest request)
             throws ParseException {
         System.out.println("Service !!!!");
+        /* DEFINITION DE LA FONCTION A APPELLER */
         fctn.setFct(fct);
         System.out.println(data);
+        /* CREATION DU JSON DE LA REPONSE */
         WebService result = new WebService(this.instanceID);
+        /* NOM DE DE L'APPLICATION SENDER */
         result.senderSet("toto");
+        /* RECUPERATION DU RESULTAT DE L EXECUTION DU WEB SERVICE */
         result.dataSet(new TrueData(fctn.execute()));
         return new Gson().toJson(result);
     }
@@ -169,8 +174,8 @@ public class HomeController {
      * @throws IOException
      */
     public @ResponseBody String sendFile(String targetName, String targetInstance, String fctName) throws IOException {
-        SendFile target = new SendFile(instanceID, "test", "BO");
-        File fileLocation = new File("myfile"); /* FIXME */
+        SendFile target = new SendFile(this.instanceID, fctName, targetName);
+        File fileLocation = new File("myfile"); /* FIXME NAME OF THE FILE THAT YOU WANT TO SEND */
         MyHttpPostFile myHttpPostFile = new MyHttpPostFile(new HttpPost("http://" + this.stip + "/send_file?fct="
                 + fctName + "&target=" + targetName + "&targetInstance=" + targetInstance + ""),
                 new StringEntity("data=" + new Gson().toJson(target)), fileLocation);
