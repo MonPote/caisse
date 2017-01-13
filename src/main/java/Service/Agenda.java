@@ -7,13 +7,15 @@ public class Agenda {
 
     String time;
     Integer repeat;
+    Integer repeat_number;
     String callback;
     String[] agenda;
 
-    public Agenda(String time, Integer repeat, String callback)
+    public Agenda(String time, Integer repeat, Integer repeat_number, String callback)
     {
         this.time = time;
         this.repeat = repeat;
+        this.repeat_number = repeat_number;
         this.callback = callback;
     }
 
@@ -21,7 +23,8 @@ public class Agenda {
     {
         agenda[0] = time;
         agenda[1] = repeat.toString();
-        agenda[2] = callback;
+        agenda[2] = repeat_number.toString();
+        agenda[3] = callback;
         return agenda;
     }
 }

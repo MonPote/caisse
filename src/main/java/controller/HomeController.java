@@ -107,9 +107,9 @@ public class HomeController {
          * Creating the agenda
          */
         Agenda[] agendaOut = new Agenda[3];
-        agendaOut[0] = new Agenda("09:00",5, "WebService");
-        agendaOut[1] = new Agenda("10:00", 5, "WebService");
-        agendaOut[2] = new Agenda("11:00", 5, "WebService");
+        agendaOut[0] = new Agenda("09:00",5, 1, "WebService");
+        agendaOut[1] = new Agenda("10:00", 5, 1, "WebService");
+        agendaOut[2] = new Agenda("11:00", 5, 1, "WebService");
         Handshake handOut = new Handshake(this.appName, this.instanceID, this.appip, agendaOut);
 
         /**
