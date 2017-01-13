@@ -6,12 +6,12 @@ package Service;
 public class Agenda {
 
     String time;
-    Integer repeat;
+    String repeat;
     Integer repeat_number;
     String callback;
     String[] agenda;
 
-    public Agenda(String time, Integer repeat, Integer repeat_number, String callback)
+    public Agenda(String time, String repeat, Integer repeat_number, String callback)
     {
         this.time = time;
         this.repeat = repeat;

@@ -3,24 +3,19 @@ package controller;
 import Service.*;
 import Service.ServicesKit.*;
 import com.google.gson.Gson;
-import model.*;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.json.JSONArray;
+import org.hibernate.annotations.SourceType;
 import org.json.JSONObject;
 import org.springframework.expression.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
 
 
 /**
@@ -28,27 +23,16 @@ import java.util.List;
  */
 @Controller
 public class HomeController {
-    private int instanceID = 44;
-    private String appName = "BO";
-    private String appip = null;
-    private String stip = null;
+    private int instanceID = 42;
+    private String appName = "entrepot";
+    private String appip;
+    private String stip;
 
-    private ProductService productService;
-    private StoreService storeService;
-    private LocalizationService localizationService;
-    private BrandService brandService;
-    private CategoryService categoryService;
     private ParseFunction fctn = null;
 
 
     public HomeController() {
-        this.productService = new ProductService();
-        this.storeService = new StoreService();
-        this.localizationService = new LocalizationService();
-        this.brandService = new BrandService();
-        this.categoryService = new CategoryService();
-
-        this.fctn = new ParseFunction("", new Data("", new Agenda[0]));
+        this.fctn = new ParseFunction("", "");
     }
 
     @RequestMapping(value = {"/", "/home"})
@@ -100,16 +84,16 @@ public class HomeController {
     public @ResponseBody String handshake() throws IOException, org.json.simple.parser.ParseException {
         String senderOut = System.getenv("AppName");
         if (senderOut == null) {
-            senderOut = "BO";
+            senderOut = "entrepot";
         }
 
         /**
          * Creating the agenda
          */
         Agenda[] agendaOut = new Agenda[3];
-        agendaOut[0] = new Agenda("09:00",5, 1, "WebService");
-        agendaOut[1] = new Agenda("10:00", 5, 1, "WebService");
-        agendaOut[2] = new Agenda("11:00", 5, 1, "WebService");
+        agendaOut[0] = new Agenda("09:00", "5", 10,"http://" + this.appip + "/checkFile");
+        agendaOut[1] = new Agenda("10:00", "5", 12,"http://" + this.appip + "/checkFile");
+        agendaOut[2] = new Agenda("11:00", "5", 13,"http://" + this.appip + "/checkFile");
         Handshake handOut = new Handshake(this.appName, this.instanceID, this.appip, agendaOut);
 
         /**
@@ -135,8 +119,7 @@ public class HomeController {
             throws ParseException {
         System.out.println("Messages !!!!");
         System.out.println(data);
-        /* FIXME TRAITEMENT DES DATAS DES MESSAGES VIA PARSEFUNCTION */
-        Response response = new Response(true, "Every thing works !" /* FIXME REMPLACER EN FONCTION DE LA REUSSITE OU NON DE L EXECUTION DE LA FONCTION*/);
+        Response response = new Response(true, "Every thing works !");
         return "data=" + new Gson().toJson(response);
     }
 
@@ -153,14 +136,11 @@ public class HomeController {
                                               HttpServletRequest request)
             throws ParseException {
         System.out.println("Service !!!!");
-        /* DEFINITION DE LA FONCTION A APPELLER */
+        fctn.setData(data);
         fctn.setFct(fct);
         System.out.println(data);
-        /* CREATION DU JSON DE LA REPONSE */
         WebService result = new WebService(this.instanceID);
-        /* NOM DE DE L'APPLICATION SENDER */
         result.senderSet("toto");
-        /* RECUPERATION DU RESULTAT DE L EXECUTION DU WEB SERVICE */
         result.dataSet(new TrueData(fctn.execute()));
         return new Gson().toJson(result);
     }
@@ -174,51 +154,37 @@ public class HomeController {
      * @throws IOException
      */
     public @ResponseBody String sendFile(String targetName, String targetInstance, String fctName) throws IOException {
-        SendFile target = new SendFile(this.instanceID, fctName, targetName);
-        File fileLocation = new File("myfile"); /* FIXME NAME OF THE FILE THAT YOU WANT TO SEND */
-        MyHttpPostFile myHttpPostFile = new MyHttpPostFile(new HttpPost("http://" + this.stip + "/send_file?fct="
-                + fctName + "&target=" + targetName + "&targetInstance=" + targetInstance + ""),
+        SendFile target = new SendFile(instanceID, "test", this.appName);
+        File fileLocation = new File("myfile"); /* FIXME */
+        MyHttpPostFile myHttpPostFile = new MyHttpPostFile(new HttpPost("http://" + this.stip + "/api/send_file?fct="
+                + fctName + "&target=" + targetName + "&targetInstance=" + targetInstance + "&sender=" + this.appName
+                + "&senderInstance=" + this.instanceID),
                 new StringEntity("data=" + new Gson().toJson(target)), fileLocation);
         return myHttpPostFile.execute();
     }
 
     /**
      * Get file from st and store it into the application
-     * @param fct
-     * @param app
-     * @param file
-     * @param request
      * @return
      * @throws IOException
      */
-    @RequestMapping(value = "/notif_file", method = RequestMethod.GET)
+    @RequestMapping(value = "/api/notif_file", method = RequestMethod.POST)
     public @ResponseBody String notifFile(@RequestParam(required = true, value = "fct", defaultValue = "") String fct,
-                                        @RequestParam(value = "sender", defaultValue = "") String app,
-                                        @RequestParam(value = "targetInstance", defaultValue = "") String targetInstance,
-                                        @RequestParam(value = "fileID", defaultValue = "") MultipartFile file,
+                                        @RequestParam(required = true, value = "data", defaultValue = "") String data,
                                         HttpServletRequest request) throws IOException {
-        System.out.println("notif File !!!!");
-        MyHttpGetFile myHttpGetFile = new MyHttpGetFile("http://" + this.stip + "/get_file?target=" + app
-                + "&instance=" + targetInstance + "&fielid=" + file, "");
-        String result = myHttpGetFile.execute();
-        getFile(file, result, targetInstance);
+        System.out.println("notif File !!!!!!!!!");
+        JSONObject jsonObj = new JSONObject(data);
+        System.out.println(data);
+        System.out.println(jsonObj.get("fileID"));
+        String file = jsonObj.get("fileID").toString().replaceAll("\"", "")
+                .replaceAll("[\\[\\]\"]", "").replaceAll(" ", "+");
+//        FIXME
+//        MyHttpGetFile myHttpGetFile = new MyHttpGetFile("http://" + this.stip + "/api/get_file?target=" + this.appName
+//                + "&targetInstance=" + this.instanceID + "&fileID=" + file, "/project/upload-dir/123-", file,
+//                Integer.toString(this.instanceID));
+//        String result = myHttpGetFile.execute();
         Response response = new Response(true, "Every thing works !");
-        return "data=" + new Gson().toJson(response);
-    }
-
-    /**
-     * Function that store the receptioned file
-     * @param file
-     * @param content
-     * @param targetInstance
-     * @return
-     * @throws IOException
-     */
-    public String getFile(MultipartFile file, String content, String targetInstance) throws IOException {
-        System.out.println("getFile !!!!");
-        FileHandler fileHandler = new FileHandler(file);
-        fileHandler.store(file, targetInstance);
-        Response response = new Response(true, "Every thing works !");
+        System.out.println(response + "5fe6w156 few1f ew1f6w1e6 51w6e1");
         return "data=" + new Gson().toJson(response);
     }
 
@@ -247,12 +213,12 @@ public class HomeController {
     @RequestMapping(value = "/testFile")
     public @ResponseBody String testSendFile() throws IOException {
         TrueData trueData = new TrueData("toto");
-        String fctName = "test";
+        String fctName = "http://" + this.appName + "/checkFile";
         String targetName = this.appName;
         String targetInstance = Integer.toString(this.instanceID);
         Message target = new Message(this.appName, this.instanceID, trueData);
         File fileLocation = new File("/project/upload-dir/hello.txt");
-        MyHttpPostFile myHttpPostFile = new MyHttpPostFile(new HttpPost("http://" + this.stip + "/api/send_file?fct=" + fctName + "&target=" + targetName + "&targetInstance=" + targetInstance + ""),
+        MyHttpPostFile myHttpPostFile = new MyHttpPostFile(new HttpPost("http://" + this.stip + "/api/send_file?fct=" + fctName + "&target=" + targetName + "&targetInstance=" + targetInstance + "&sender=" + this.appName + "&senderInstance=" + this.instanceID),
                 new StringEntity("data=" + new Gson().toJson(target)), fileLocation);
         return myHttpPostFile.execute();
     }
@@ -260,6 +226,7 @@ public class HomeController {
     @RequestMapping(value = "/checkFile")
     public @ResponseBody String checkFile() throws IOException {
         File fileLocation = new File("/project/upload-dir/hello.txt");
+        System.out.println(fileLocation);
         File dir = new File("/project");
         File[] filesList = dir.listFiles();
         for (File file : filesList) {
