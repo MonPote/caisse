@@ -32,6 +32,10 @@ public class ParseFunction {
 
     public String execute() {
         switch (fct) {
+            case "clientToCA":
+                System.out.println("Je suis bien appelé");
+                break;
+
             default: {
                 System.out.println("Unknown function: " + fct);
                 break;

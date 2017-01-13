@@ -136,6 +136,15 @@ public class HomeController {
                                               HttpServletRequest request)
             throws ParseException {
         System.out.println("Service !!!!");
+        System.out.println("My FCT = " + fct);
+        System.out.println("My JSON = "+ data);
+
+        try {
+            System.out.println(request.getReader().readLine());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         fctn.setData(data);
         fctn.setFct(fct);
         System.out.println(data);
