@@ -136,8 +136,8 @@ public class HomeController {
             throws ParseException {
         System.out.println("Service !!!!");
         System.out.println("My FCT = " + fct);
-        String dataStr;
-        
+        String dataStr = "";
+
         try {
             dataStr = IOUtils.toString(request.getInputStream(), "UTF-8");
             System.out.println("dataStr = " + dataStr);
@@ -145,7 +145,7 @@ public class HomeController {
             e.printStackTrace();
         }
 
-        fctn.setData(data);
+        fctn.setData(dataStr);
         fctn.setFct(fct);
         System.out.println(data);
         WebService result = new WebService(this.instanceID);

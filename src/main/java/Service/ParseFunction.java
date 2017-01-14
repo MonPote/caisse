@@ -1,6 +1,10 @@
 package Service;
 
+import Service.CaisseService.Client;
+import Service.CaisseService.Produit;
 import com.google.gson.Gson;
+
+import java.util.List;
 
 /**
  * Created by Steven on 02/11/2016.
@@ -8,6 +12,7 @@ import com.google.gson.Gson;
 public class ParseFunction {
     String fct = "";
     String data = "";
+    Gson gson = new Gson();
 
     public ParseFunction(String fct, String data) {
         this.fct = fct;
@@ -34,6 +39,16 @@ public class ParseFunction {
         switch (fct) {
             case "clientToCA":
                 System.out.println("Je suis bien appelé");
+                System.out.println("Et la data = " + data);
+                Client client = gson.fromJson(data, Client.class);
+
+                System.out.println("client crée et modePaiement = " + client.getModePaiement() + " carteFid = " + client.getCarteFid());
+                List<Produit> panier = client.getPanier();
+
+                for (Produit produit: panier) {
+                    System.out.println("code produit = " + produit.getCodeProduit() + " quantity = " + produit.getQuantity());
+                }
+
                 break;
 
             default: {
