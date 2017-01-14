@@ -3,16 +3,15 @@ package controller;
 import Service.*;
 import Service.ServicesKit.*;
 import com.google.gson.Gson;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
-import org.hibernate.annotations.SourceType;
 import org.json.JSONObject;
 import org.springframework.expression.ParseException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.nio.charset.Charset;
@@ -137,10 +136,11 @@ public class HomeController {
             throws ParseException {
         System.out.println("Service !!!!");
         System.out.println("My FCT = " + fct);
-        System.out.println("My JSON = "+ data);
-
+        String dataStr;
+        
         try {
-            System.out.println(request.getReader().readLine());
+            dataStr = IOUtils.toString(request.getInputStream(), "UTF-8");
+            System.out.println("dataStr = " + dataStr);
         } catch (IOException e) {
             e.printStackTrace();
         }
