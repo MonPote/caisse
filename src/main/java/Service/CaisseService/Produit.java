@@ -7,6 +7,11 @@ public class Produit {
     private String codeProduit;
     private int quantity;
 
+    public Produit() {
+        this.codeProduit = "678678";
+        this.quantity = 12;
+    }
+
     public String getCodeProduit() {
         return codeProduit;
     }

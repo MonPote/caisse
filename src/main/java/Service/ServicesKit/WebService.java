@@ -51,8 +51,6 @@ public class WebService {
         this.data = dataIn;
 
     }
-
-    
 }
 
 

@@ -1,5 +1,6 @@
 package Service;
 
+import Service.CaisseService.CaisseData;
 import Service.CaisseService.Client;
 import Service.CaisseService.Produit;
 import com.google.gson.Gson;
@@ -40,7 +41,8 @@ public class ParseFunction {
             case "customerToCA":
                 System.out.println("Je suis bien appelé");
                 System.out.println("Et la data = " + data);
-                Client client = gson.fromJson(data, Client.class);
+                CaisseData caisseData = gson.fromJson(data, CaisseData.class);
+                Client client = caisseData.getData();
 
                 System.out.println("client crée et modePaiement = " + client.getModePaiement() + " carteFid = " + client.getCarteFid());
                 List<Produit> panier = client.getPanier();
@@ -60,6 +62,6 @@ public class ParseFunction {
             }
         }
 
-        return new Gson().toJson("msg");
+        return "";
     }
 }

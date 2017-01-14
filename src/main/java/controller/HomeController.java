@@ -1,8 +1,13 @@
 package controller;
 
 import Service.*;
+import Service.CaisseService.CaisseData;
+import Service.CaisseService.CaisseMessage;
+import Service.CaisseService.Client;
+import Service.CaisseService.Produit;
 import Service.ServicesKit.*;
 import com.google.gson.Gson;
+import com.sun.org.apache.bcel.internal.generic.GOTO;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -15,6 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -85,7 +92,7 @@ public class HomeController {
         if (senderOut == null) {
             senderOut = "entrepot";
         }
-
+        System.out.println("Doing handshake");
         /**
          * Creating the agenda
          */
@@ -117,7 +124,15 @@ public class HomeController {
                                               HttpServletRequest request)
             throws ParseException {
         System.out.println("Messages !!!!");
+        System.out.println("CALL ON APIMSG !!! AND DATA = " + data);
+        String test = "hello";
+        fctn.setFct(test);
         System.out.println(data);
+        WebService result = new WebService(this.instanceID);
+        result.senderSet("Caisse");
+        result.dataSet(new TrueData(fctn.execute()));
+
+
         Response response = new Response(true, "Every thing works !");
         return "data=" + new Gson().toJson(response);
     }
@@ -144,9 +159,11 @@ public class HomeController {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        fctn.setData(dataStr);
-        fctn.setFct(fct);
+//        System.out.println("data = " + data);
+//        fctn.setData(data);
+//        fctn.setData(dataStr);
+        String test = "hello";
+        fctn.setFct(test);
         System.out.println(data);
         WebService result = new WebService(this.instanceID);
         result.senderSet("Caisse");
@@ -201,11 +218,37 @@ public class HomeController {
         TEST PART
      */
 
+    @RequestMapping(value = "/patTest")
+    public @ResponseBody String patTestSendMessage(HttpServletRequest request) throws IOException {
+        Gson gson = new Gson();
+        System.out.println("patTest");
+
+//        this.appName = "Caisse";
+//        this.instanceID = 0;
+        Produit produit = new Produit();
+        List<Produit> list = new ArrayList<Produit>();
+        list.add(produit);
+
+        Client client = new Client("mode", "fkdsjfkldsjf", list);
+
+
+//        String jsonInString = gson.toJson(client);
+//        System.out.println("myjsonString = " + jsonInString);
+//        TrueData trueData = new TrueData(jsonInString);
+
+        String data = new Gson().toJson(new CaisseMessage(this.appName, this.instanceID, client));
+
+        System.out.println("myjsonStringDATA = " + data);
+        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/msg?fct=WebService&target=" + this.appName +"&targetInstance=" + this.instanceID + ""),
+                new StringEntity("data=" + data));
+        return myHttpPost.execute();
+    }
+
     @RequestMapping(value = "/testMsg")
     public @ResponseBody String testSendMessage(HttpServletRequest request) throws IOException {
         TrueData trueData = new TrueData("toto");
         String data = new Gson().toJson(new Message(this.appName, this.instanceID, trueData));
-        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/msg?fct=WebService&target=" + this.appName +"&targetInstance=" + this.instanceID + ""),
+        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/msg?fct=ClientToCA&target=" + this.appName +"&targetInstance=" + this.instanceID + ""),
                 new StringEntity("data=" + data));
         return myHttpPost.execute();
     }
@@ -214,6 +257,7 @@ public class HomeController {
     public @ResponseBody String testService(HttpServletRequest request) throws IOException {
         TrueData trueData = new TrueData("toto");
         String data = new Gson().toJson(new Message(this.appName, this.instanceID, trueData));
+        System.out.println("this.ip = " + this.stip);
         MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/service?fct=WebService&target=" + this.appName + "&targetInstance=" + this.instanceID + ""),
                 new StringEntity("data=" + data));
         return myHttpPost.execute();
