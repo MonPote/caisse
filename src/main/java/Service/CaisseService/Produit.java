@@ -5,13 +5,13 @@ package Service.CaisseService;
  */
 public class Produit {
     private String codeProduit;
-    private String quantity;
+    private int quantity;
 
     public String getCodeProduit() {
         return codeProduit;
     }
 
-    public String getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 }

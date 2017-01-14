@@ -22,9 +22,8 @@ public class Client {
         if (modePaiement == null || carteFid == null)
             return false;
 
-
         for (Produit produit: panier) {
-            if (produit.getCodeProduit() == null || produit.getQuantity() == null)
+            if (produit.getCodeProduit() == null || produit.getQuantity() <= 0)
                 return false;
         }
 

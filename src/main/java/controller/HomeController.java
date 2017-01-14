@@ -149,7 +149,7 @@ public class HomeController {
         fctn.setFct(fct);
         System.out.println(data);
         WebService result = new WebService(this.instanceID);
-        result.senderSet("toto");
+        result.senderSet("Caisse");
         result.dataSet(new TrueData(fctn.execute()));
         return "data=" + new Gson().toJson(result);
     }
