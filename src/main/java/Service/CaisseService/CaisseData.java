@@ -12,14 +12,6 @@ public class CaisseData {
     private String date;
     private Customer data;
 
-    public String getSender() { return sender; }
-
-    public int getInstanceID() { return instanceID; }
-
-    public String getYourApp() { return yourApp; }
-
-    public int getYourInstance() { return yourInstance; }
-
     public String getDate() { return date; }
 
     public Customer getData() { return data; }

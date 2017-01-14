@@ -207,7 +207,7 @@ public class HomeController {
         Gson gson = new Gson();
 
         Produit produit = new Produit();
-        List<Produit> list = new ArrayList<Produit>();
+        List<Produit> list = new ArrayList<>();
         list.add(produit);
         list.add(produit);
         list.add(produit);

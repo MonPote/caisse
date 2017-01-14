@@ -2,10 +2,13 @@ package Service;
 
 import Service.CaisseService.CaisseData;
 import Service.CaisseService.Customer;
+import Service.CaisseService.Product;
 import Service.CaisseService.Produit;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Steven on 02/11/2016.
@@ -46,15 +49,17 @@ public class ParseFunction {
                 Customer customer = caisseData.getData();
                 List<Produit> panier = customer.getPanier();
 
-                for (Produit produit: panier) {
-                    System.out.println("code produit = " + produit.getCodeProduit() + " quantity = " + produit.getQuantity());
-                }
-
                 if (!customer.isValid()) {
                     return "nok"; // PAS OK
                 } else {
                     // call BO
+                    List<Product> basket = panier.stream()
+                            .map(produit -> new Product(produit.getCodeProduit(), produit.getQuantity()))
+                            .collect(Collectors.toList());
 
+                    for (Product product: basket) {
+                        System.out.println("produit = " + product.toString());
+                    }
                     return "ok"; // OK
                 }
             }
