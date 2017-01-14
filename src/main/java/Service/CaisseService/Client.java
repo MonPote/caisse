@@ -10,6 +10,8 @@ public class Client {
     private String carteFid;
     private List<Produit> panier;
 
+    public Client() {}
+
     public Client(String modePaiement, String carteFid, List<Produit> panier) {
         this.modePaiement = modePaiement;
         this.carteFid = carteFid;

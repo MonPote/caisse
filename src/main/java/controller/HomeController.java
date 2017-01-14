@@ -1,10 +1,7 @@
 package controller;
 
 import Service.*;
-import Service.CaisseService.CaisseData;
-import Service.CaisseService.CaisseMessage;
-import Service.CaisseService.Client;
-import Service.CaisseService.Produit;
+import Service.CaisseService.*;
 import Service.ServicesKit.*;
 import com.google.gson.Gson;
 import com.sun.org.apache.bcel.internal.generic.GOTO;
@@ -153,21 +150,21 @@ public class HomeController {
         System.out.println("My FCT = " + fct);
         String dataStr = "";
 
-        try {
-            dataStr = IOUtils.toString(request.getInputStream(), "UTF-8");
-            System.out.println("dataStr = " + dataStr);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-//        System.out.println("data = " + data);
-//        fctn.setData(data);
+//        try {
+//            dataStr = IOUtils.toString(request.getInputStream(), "UTF-8");
+//            System.out.println("dataStr = " + dataStr);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        System.out.println("data = " + data);
+
 //        fctn.setData(dataStr);
-        String test = "hello";
-        fctn.setFct(test);
-        System.out.println(data);
-        WebService result = new WebService(this.instanceID);
-        result.senderSet("Caisse");
-        result.dataSet(new TrueData(fctn.execute()));
+//        String test = "hello";
+        fctn.setFct(fct);
+        fctn.setData(data);
+        CaisseWebService result = new CaisseWebService("Caisse", this.instanceID, fctn.caisseExecute());
+//        result.senderSet("Caisse");
+//        result.dataSet(new TrueData(fctn.execute()));
         return "data=" + new Gson().toJson(result);
     }
 
@@ -220,27 +217,22 @@ public class HomeController {
 
     @RequestMapping(value = "/patTest")
     public @ResponseBody String patTestSendMessage(HttpServletRequest request) throws IOException {
-        Gson gson = new Gson();
         System.out.println("patTest");
+        Gson gson = new Gson();
 
-//        this.appName = "Caisse";
-//        this.instanceID = 0;
+
         Produit produit = new Produit();
         List<Produit> list = new ArrayList<Produit>();
         list.add(produit);
 
         Client client = new Client("mode", "fkdsjfkldsjf", list);
-
-
-//        String jsonInString = gson.toJson(client);
-//        System.out.println("myjsonString = " + jsonInString);
-//        TrueData trueData = new TrueData(jsonInString);
-
         String data = new Gson().toJson(new CaisseMessage(this.appName, this.instanceID, client));
-
         System.out.println("myjsonStringDATA = " + data);
-        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/msg?fct=WebService&target=" + this.appName +"&targetInstance=" + this.instanceID + ""),
+
+
+        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/service?fct=ticket&target=" + this.appName +"&targetInstance=" + this.instanceID + ""),
                 new StringEntity("data=" + data));
+
         return myHttpPost.execute();
     }
 

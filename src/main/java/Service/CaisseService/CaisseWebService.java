@@ -1,24 +1,20 @@
-package Service.ServicesKit;
-
+package Service.CaisseService;
 
 /**
- * Created by Hugo Capes on 01/10/2016.
- * This class contains the elements for the response to the "socle technique", elements which needs to be
- * JSONified and sent.
+ * Created by patrickear on 14/1/2017.
  */
-public class WebService {
-
+public class CaisseWebService {
     private String sender; //the application which send the result
     private int instanceID; //the ID of the application
-    private TrueData data; //the answer itself from the application
+    private Client data; //the answer itself from the application
 
-    public WebService(int instanceIDIn) {
+    public CaisseWebService(int instanceIDIn) {
         this.sender = "";
         this.instanceID = instanceIDIn;
     }
 
     //Constructor
-    public WebService(String senderIn, int instanceIDIn, TrueData dataIn) {
+    public CaisseWebService(String senderIn, int instanceIDIn, Client dataIn) {
         this.sender = senderIn;
         this.instanceID = instanceIDIn;
         this.data = dataIn;
@@ -34,7 +30,7 @@ public class WebService {
         return this.instanceID;
     }
 
-    public TrueData dataGet(){
+    public Client dataGet(){
         return this.data;
     }
 
@@ -47,15 +43,7 @@ public class WebService {
         this.instanceID = instanceIDIn;
     }
 
-    public void dataSet (TrueData dataIn){
+    public void dataSet (Client dataIn){
         this.data = dataIn;
     }
 }
-
-
-
-
-
-
-
-

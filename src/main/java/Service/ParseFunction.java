@@ -38,7 +38,7 @@ public class ParseFunction {
 
     public String execute() {
         switch (fct) {
-            case "customerToCA":
+            case "ticket":
                 System.out.println("Je suis bien appelé");
                 System.out.println("Et la data = " + data);
                 CaisseData caisseData = gson.fromJson(data, CaisseData.class);
@@ -61,7 +61,31 @@ public class ParseFunction {
                 break;
             }
         }
-
         return "";
+    }
+
+    public Client caisseExecute() {
+        switch (fct) {
+            case "ticket":
+                CaisseData caisseData = gson.fromJson(data, CaisseData.class);
+                Client client = caisseData.getData();
+
+                List<Produit> panier = client.getPanier();
+
+                for (Produit produit: panier) {
+                    System.out.println("code produit = " + produit.getCodeProduit() + " quantity = " + produit.getQuantity());
+                }
+
+                if (!client.isValid()) {
+                    return new Client(); // PAS OK
+                } else {
+                    return new Client(); // OK
+                }
+            default: {
+                System.out.println("Unknown function: " + fct);
+                break;
+            }
+        }
+        return new Client();
     }
 }
