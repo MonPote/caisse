@@ -6,9 +6,9 @@ package Service.CaisseService;
 public class CaisseMessage {
     private String sender;
     private int instanceID;
-    private Client data;
+    private Customer data;
 
-    public CaisseMessage(String senderIn, int instanceIDIn, Client data) {
+    public CaisseMessage(String senderIn, int instanceIDIn, Customer data) {
         this.sender = senderIn;
         this.instanceID = instanceIDIn;
         this.data = data;

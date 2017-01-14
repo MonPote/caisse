@@ -1,7 +1,7 @@
 package Service;
 
 import Service.CaisseService.CaisseData;
-import Service.CaisseService.Client;
+import Service.CaisseService.Customer;
 import Service.CaisseService.Produit;
 import com.google.gson.Gson;
 
@@ -43,14 +43,14 @@ public class ParseFunction {
                 CaisseData caisseData = gson.fromJson(data, CaisseData.class);
                 System.out.println(caisseData.toString());
 
-                Client client = caisseData.getData();
-                List<Produit> panier = client.getPanier();
+                Customer customer = caisseData.getData();
+                List<Produit> panier = customer.getPanier();
 
                 for (Produit produit: panier) {
                     System.out.println("code produit = " + produit.getCodeProduit() + " quantity = " + produit.getQuantity());
                 }
 
-                if (!client.isValid()) {
+                if (!customer.isValid()) {
                     return "nok"; // PAS OK
                 } else {
                     // call BO

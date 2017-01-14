@@ -7,14 +7,14 @@ import java.util.List;
 /**
  * Created by patrickear on 14/1/2017.
  */
-public class Client {
+public class Customer {
     private String modePaiement;
     private String carteFid;
     private List<Produit> panier;
 
-    public Client() {}
+    public Customer() {}
 
-    public Client(String modePaiement, String carteFid, List<Produit> panier) {
+    public Customer(String modePaiement, String carteFid, List<Produit> panier) {
         this.modePaiement = modePaiement;
         this.carteFid = carteFid;
         this.panier = panier;

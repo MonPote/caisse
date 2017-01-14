@@ -213,7 +213,7 @@ public class HomeController {
         list.add(produit);
         list.add(produit);
 
-        Client client = new Client("mode", "fkdsjfkldsjf", list);
+        Customer client = new Customer("mode", "fkdsjfkldsjf", list);
         String data = gson.toJson(new CaisseMessage(this.appName, this.instanceID, client));
         System.out.println("myjsonStringDATA = " + data);
 

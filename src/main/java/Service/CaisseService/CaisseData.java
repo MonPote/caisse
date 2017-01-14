@@ -10,7 +10,7 @@ public class CaisseData {
     private String yourApp;
     private int yourInstance;
     private String date;
-    private Client data;
+    private Customer data;
 
     public String getSender() { return sender; }
 
@@ -22,7 +22,7 @@ public class CaisseData {
 
     public String getDate() { return date; }
 
-    public Client getData() { return data; }
+    public Customer getData() { return data; }
 
     @Override
     public String toString() {

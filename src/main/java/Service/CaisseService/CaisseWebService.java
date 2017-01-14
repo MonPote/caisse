@@ -6,7 +6,7 @@ package Service.CaisseService;
 public class CaisseWebService {
     private String sender; //the application which send the result
     private int instanceID; //the ID of the application
-    private Client data; //the answer itself from the application
+    private Customer data; //the answer itself from the application
 
     public CaisseWebService(int instanceIDIn) {
         this.sender = "";
@@ -14,7 +14,7 @@ public class CaisseWebService {
     }
 
     //Constructor
-    public CaisseWebService(String senderIn, int instanceIDIn, Client dataIn) {
+    public CaisseWebService(String senderIn, int instanceIDIn, Customer dataIn) {
         this.sender = senderIn;
         this.instanceID = instanceIDIn;
         this.data = dataIn;
@@ -30,7 +30,7 @@ public class CaisseWebService {
         return this.instanceID;
     }
 
-    public Client dataGet(){
+    public Customer dataGet(){
         return this.data;
     }
 
@@ -43,7 +43,7 @@ public class CaisseWebService {
         this.instanceID = instanceIDIn;
     }
 
-    public void dataSet (Client dataIn){
+    public void dataSet (Customer dataIn){
         this.data = dataIn;
     }
 }
