@@ -151,7 +151,7 @@ public class HomeController {
         WebService result = new WebService(this.instanceID);
         result.senderSet("toto");
         result.dataSet(new TrueData(fctn.execute()));
-        return new Gson().toJson(result);
+        return "data=" + new Gson().toJson(result);
     }
 
     /**

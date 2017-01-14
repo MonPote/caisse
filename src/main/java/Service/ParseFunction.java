@@ -37,7 +37,7 @@ public class ParseFunction {
 
     public String execute() {
         switch (fct) {
-            case "clientToCA":
+            case "customerToCA":
                 System.out.println("Je suis bien appelé");
                 System.out.println("Et la data = " + data);
                 Client client = gson.fromJson(data, Client.class);
@@ -49,8 +49,11 @@ public class ParseFunction {
                     System.out.println("code produit = " + produit.getCodeProduit() + " quantity = " + produit.getQuantity());
                 }
 
-                break;
-
+                if (!client.isValid()) {
+                    return gson.toJson("nok");
+                } else {
+                    return gson.toJson("ok");
+                }
             default: {
                 System.out.println("Unknown function: " + fct);
                 break;

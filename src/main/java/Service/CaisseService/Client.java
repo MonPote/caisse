@@ -17,4 +17,17 @@ public class Client {
     public List<Produit> getPanier() {
         return panier;
     }
+
+    public boolean isValid() {
+        if (modePaiement == null || carteFid == null)
+            return false;
+
+
+        for (Produit produit: panier) {
+            if (produit.getCodeProduit() == null || produit.getQuantity() == null)
+                return false;
+        }
+
+        return true;
+    }
 }
