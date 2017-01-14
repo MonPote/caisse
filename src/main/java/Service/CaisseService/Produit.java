@@ -1,5 +1,7 @@
 package Service.CaisseService;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 /**
  * Created by patrickear on 14/1/2017.
  */
@@ -18,5 +20,10 @@ public class Produit {
 
     public int getQuantity() {
         return quantity;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

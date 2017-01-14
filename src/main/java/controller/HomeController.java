@@ -4,8 +4,6 @@ import Service.*;
 import Service.CaisseService.*;
 import Service.ServicesKit.*;
 import com.google.gson.Gson;
-import com.sun.org.apache.bcel.internal.generic.GOTO;
-import org.apache.commons.io.IOUtils;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.json.JSONObject;
@@ -148,23 +146,11 @@ public class HomeController {
             throws ParseException {
         System.out.println("Service !!!!");
         System.out.println("My FCT = " + fct);
-        String dataStr = "";
 
-//        try {
-//            dataStr = IOUtils.toString(request.getInputStream(), "UTF-8");
-//            System.out.println("dataStr = " + dataStr);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-        System.out.println("data = " + data);
-
-//        fctn.setData(dataStr);
-//        String test = "hello";
         fctn.setFct(fct);
         fctn.setData(data);
-        CaisseWebService result = new CaisseWebService("Caisse", this.instanceID, fctn.caisseExecute());
-//        result.senderSet("Caisse");
-//        result.dataSet(new TrueData(fctn.execute()));
+
+        WebService result = new WebService("Caisse", this.instanceID, new TrueData(fctn.execute()));
         return "data=" + new Gson().toJson(result);
     }
 

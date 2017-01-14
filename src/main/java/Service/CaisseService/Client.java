@@ -1,5 +1,7 @@
 package Service.CaisseService;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+
 import java.util.List;
 
 /**
@@ -36,5 +38,10 @@ public class Client {
         }
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this);
     }
 }

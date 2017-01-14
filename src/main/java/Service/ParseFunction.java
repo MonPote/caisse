@@ -38,13 +38,13 @@ public class ParseFunction {
 
     public String execute() {
         switch (fct) {
-            case "ticket":
-                System.out.println("Je suis bien appelé");
-                System.out.println("Et la data = " + data);
+            case "ticket": {
+                System.out.println("data = " + data);
                 CaisseData caisseData = gson.fromJson(data, CaisseData.class);
+                System.out.println(caisseData.toString());
+
                 Client client = caisseData.getData();
 
-                System.out.println("client crée et modePaiement = " + client.getModePaiement() + " carteFid = " + client.getCarteFid());
                 List<Produit> panier = client.getPanier();
 
                 for (Produit produit: panier) {
@@ -52,40 +52,18 @@ public class ParseFunction {
                 }
 
                 if (!client.isValid()) {
-                    return gson.toJson("nok");
+                    return "nok"; // PAS OK
                 } else {
-                    return gson.toJson("ok");
+                    // call BO
+
+                    return "ok"; // OK
                 }
+            }
             default: {
                 System.out.println("Unknown function: " + fct);
                 break;
             }
         }
         return "";
-    }
-
-    public Client caisseExecute() {
-        switch (fct) {
-            case "ticket":
-                CaisseData caisseData = gson.fromJson(data, CaisseData.class);
-                Client client = caisseData.getData();
-
-                List<Produit> panier = client.getPanier();
-
-                for (Produit produit: panier) {
-                    System.out.println("code produit = " + produit.getCodeProduit() + " quantity = " + produit.getQuantity());
-                }
-
-                if (!client.isValid()) {
-                    return new Client(); // PAS OK
-                } else {
-                    return new Client(); // OK
-                }
-            default: {
-                System.out.println("Unknown function: " + fct);
-                break;
-            }
-        }
-        return new Client();
     }
 }
