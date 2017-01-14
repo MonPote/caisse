@@ -144,14 +144,39 @@ public class HomeController {
                                               @RequestParam(required = true, value = "data", defaultValue = "") String data,
                                               HttpServletRequest request)
             throws ParseException {
-        System.out.println("Service !!!!");
-        System.out.println("My FCT = " + fct);
+        System.out.println("=========================================================================================");
+        System.out.println("/api/service function = " + fct);
 
         fctn.setFct(fct);
         fctn.setData(data);
 
-        WebService result = new WebService("Caisse", this.instanceID, new TrueData(fctn.execute()));
-        return "data=" + new Gson().toJson(result);
+//        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/service?fct=ticket&target=" + this.appName +"&targetInstance=" + this.instanceID + ""),
+//                new StringEntity("data=" + data));
+//      this.appName -> targetName  && this.instance -> targetInstance
+        String serviceResponse;
+        PurchaseInfo purchaseInfo = fctn.executeTicket();
+        if (purchaseInfo == null) {
+            System.out.println("purchase is null");
+            serviceResponse = "nok";
+        } else {
+            System.out.println("purchase is NOT null");
+            CaisseWebService result = new CaisseWebService("Caisse", this.instanceID, purchaseInfo);
+            String newData = new Gson().toJson(result);
+            try {
+                MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/service?fct=ticketToBO&target="
+                        + this.appName +"&targetInstance=" + this.instanceID + ""), new StringEntity("data=" + newData));
+                myHttpPost.execute();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            serviceResponse = "ok";
+        }
+
+
+//        WebService result = new WebService("Caisse", this.instanceID, new TrueData(fctn.execute()));
+        // Response au webservice usually ok or not ok
+        return "data=" + new Gson().toJson(serviceResponse);
     }
 
     /**

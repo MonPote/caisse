@@ -1,10 +1,10 @@
 package Service;
 
-import Service.CaisseService.CaisseData;
-import Service.CaisseService.Customer;
-import Service.CaisseService.Product;
-import Service.CaisseService.Produit;
+import Service.CaisseService.*;
+import Service.ServicesKit.MyHttpPost;
 import com.google.gson.Gson;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,26 +42,7 @@ public class ParseFunction {
     public String execute() {
         switch (fct) {
             case "ticket": {
-                System.out.println("data = " + data);
-                CaisseData caisseData = gson.fromJson(data, CaisseData.class);
-                System.out.println(caisseData.toString());
-
-                Customer customer = caisseData.getData();
-                List<Produit> panier = customer.getPanier();
-
-                if (!customer.isValid()) {
-                    return "nok"; // PAS OK
-                } else {
-                    // call BO
-                    List<Product> basket = panier.stream()
-                            .map(produit -> new Product(produit.getCodeProduit(), produit.getQuantity()))
-                            .collect(Collectors.toList());
-
-                    for (Product product: basket) {
-                        System.out.println("produit = " + product.toString());
-                    }
-                    return "ok"; // OK
-                }
+                return "OK";
             }
             case "ticketToBO": {
                 return "ok";
@@ -72,5 +53,46 @@ public class ParseFunction {
             }
         }
         return "";
+    }
+
+    public PurchaseInfo executeTicket() {
+        switch (fct) {
+            case "ticket": {
+                System.out.println("Inside ticket");
+                System.out.println(data);
+                CaisseData caisseData = gson.fromJson(data, CaisseData.class);
+
+                Customer customer = caisseData.getData();
+                List<Produit> panier = customer.getPanier();
+
+                if (!customer.isValid()) {
+                    return null; // PAS OK
+                } else {
+                    // call BO
+                    List<Product> basket = panier.stream()
+                            .map(produit -> new Product(produit.getCodeProduit(), produit.getQuantity()))
+                            .collect(Collectors.toList());
+
+                    PurchaseInfo purchaseInfo = new PurchaseInfo("0", "", basket);
+//                    for (Product product: basket) {
+//                        System.out.println("produit = " + product.toString());
+//                    }
+                    String data = gson.toJson(purchaseInfo);
+                    System.out.println("ticket send DATA = " + data);
+
+                    return purchaseInfo; // OK
+                }
+            }
+            case "ticketToBO": {
+                System.out.println("Inside ticketToBO");
+                System.out.println(data);
+                return null;
+            }
+            default: {
+                System.out.println("Unknown function: " + fct);
+                break;
+            }
+        }
+        return null;
     }
 }
