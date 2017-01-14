@@ -206,13 +206,15 @@ public class HomeController {
         System.out.println("patTest");
         Gson gson = new Gson();
 
-
         Produit produit = new Produit();
         List<Produit> list = new ArrayList<Produit>();
         list.add(produit);
+        list.add(produit);
+        list.add(produit);
+        list.add(produit);
 
         Client client = new Client("mode", "fkdsjfkldsjf", list);
-        String data = new Gson().toJson(new CaisseMessage(this.appName, this.instanceID, client));
+        String data = gson.toJson(new CaisseMessage(this.appName, this.instanceID, client));
         System.out.println("myjsonStringDATA = " + data);
 
 

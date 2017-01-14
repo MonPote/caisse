@@ -44,7 +44,6 @@ public class ParseFunction {
                 System.out.println(caisseData.toString());
 
                 Client client = caisseData.getData();
-
                 List<Produit> panier = client.getPanier();
 
                 for (Produit produit: panier) {
@@ -58,6 +57,9 @@ public class ParseFunction {
 
                     return "ok"; // OK
                 }
+            }
+            case "ticketToBO": {
+                return "ok";
             }
             default: {
                 System.out.println("Unknown function: " + fct);
