@@ -6,10 +6,10 @@ package Service.CaisseService;
 public class CaisseWebService {
     private String sender; //the application which send the result
     private int instanceID; //the ID of the application
-    private PurchaseInfo data; //the answer itself from the application
+    private CaisseJson data; //the answer itself from the application
 
     //Constructor
-    public CaisseWebService(String senderIn, int instanceIDIn, PurchaseInfo dataIn) {
+    public CaisseWebService(String senderIn, int instanceIDIn, CaisseJson dataIn) {
         this.sender = senderIn;
         this.instanceID = instanceIDIn;
         this.data = dataIn;

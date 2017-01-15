@@ -120,6 +120,11 @@ public class HomeController {
             throws ParseException {
         System.out.println("Messages !!!!");
         System.out.println("CALL ON APIMSG !!! AND DATA = " + data);
+
+
+
+
+
         String test = "hello";
         fctn.setFct(test);
         System.out.println(data);
@@ -147,35 +152,13 @@ public class HomeController {
         System.out.println("=========================================================================================");
         System.out.println("/api/service function = " + fct);
 
-        fctn.setFct(fct);
-        fctn.setData(data);
+        // FIXME Need to do some checking
+        ParseFunction parseFunction = new ParseFunction(this.appName, this.instanceID, this.appip, this.stip);
+        parseFunction.setFct(fct);
+        parseFunction.setData(data);
 
-//        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/service?fct=ticket&target=" + this.appName +"&targetInstance=" + this.instanceID + ""),
-//                new StringEntity("data=" + data));
-//      this.appName -> targetName  && this.instance -> targetInstance
-        String serviceResponse;
-        PurchaseInfo purchaseInfo = fctn.executeTicket();
-        if (purchaseInfo == null) {
-            System.out.println("purchase is null");
-            serviceResponse = "nok";
-        } else {
-            System.out.println("purchase is NOT null");
-            CaisseWebService result = new CaisseWebService("Caisse", this.instanceID, purchaseInfo);
-            String newData = new Gson().toJson(result);
-            try {
-                MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/service?fct=ticketToBO&target="
-                        + this.appName +"&targetInstance=" + this.instanceID + ""), new StringEntity("data=" + newData));
-                myHttpPost.execute();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        String serviceResponse = parseFunction.execute();
 
-            serviceResponse = "ok";
-        }
-
-
-//        WebService result = new WebService("Caisse", this.instanceID, new TrueData(fctn.execute()));
-        // Response au webservice usually ok or not ok
         return "data=" + new Gson().toJson(serviceResponse);
     }
 
@@ -243,11 +226,42 @@ public class HomeController {
         System.out.println("myjsonStringDATA = " + data);
 
 
-        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/service?fct=ticket&target=" + this.appName +"&targetInstance=" + this.instanceID + ""),
+//        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/service?fct=ticket&target=" + this.appName +"&targetInstance=" + this.instanceID + ""),
+//                new StringEntity("data=" + data));
+
+        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/service?fct=ticket&target=" + "BO" +"&targetInstance=" + "10" + ""),
                 new StringEntity("data=" + data));
 
         return myHttpPost.execute();
     }
+
+    @RequestMapping(value = "/productsToCaisse")
+    public @ResponseBody String productsToCaisseMessage(HttpServletRequest request) throws IOException {
+        System.out.println("productsToCaisse");
+        Gson gson = new Gson();
+
+        Produit produit = new Produit();
+        List<Produit> list = new ArrayList<>();
+        list.add(produit);
+        list.add(produit);
+        list.add(produit);
+        list.add(produit);
+
+        Customer client = new Customer("mode", "fkdsjfkldsjf", list);
+        String data = gson.toJson(new CaisseMessage(this.appName, this.instanceID, client));
+        System.out.println("myjsonStringDATA = " + data);
+
+
+//        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/service?fct=ticket&target=" + this.appName +"&targetInstance=" + this.instanceID + ""),
+//                new StringEntity("data=" + data));
+
+        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/service?fct=ticket&target=" + "BO" +"&targetInstance=" + "10" + ""),
+                new StringEntity("data=" + data));
+
+        return myHttpPost.execute();
+    }
+
+
 
     @RequestMapping(value = "/testMsg")
     public @ResponseBody String testSendMessage(HttpServletRequest request) throws IOException {

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by patrickear on 14/1/2017.
  */
-public class PurchaseInfo {
+public class PurchaseInfo implements CaisseJson {
     private String receiptId;
     private String customerId;
     private List<Product> products;
