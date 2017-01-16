@@ -104,7 +104,11 @@ public class ParseFunction {
                 System.out.println("Inside couponsToCaisse");
                 System.out.println("data = " + data);
 
-
+                CouponData couponData = gson.fromJson(data, CouponData.class);
+                Coupon coupon = couponData.getData();
+                
+                System.out.println(couponData.toString());
+                System.out.println(coupon.toString());
                 // FIXME need to display the coupon send to customer, print into the screen ?
                 return "KO";
             }
