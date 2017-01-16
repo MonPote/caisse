@@ -240,27 +240,41 @@ public class HomeController {
         System.out.println("productsToCaisse");
         Gson gson = new Gson();
 
-        Produit produit = new Produit();
-        List<Produit> list = new ArrayList<>();
-        list.add(produit);
-        list.add(produit);
-        list.add(produit);
-        list.add(produit);
+        Product product = new Product("REF-01-DANAO", 42);
+        List<Product> list = new ArrayList<>();
+        list.add(product);
+        list.add(product);
+        list.add(product);
+        list.add(product);
 
-        Customer client = new Customer("mode", "fkdsjfkldsjf", list);
-        String data = gson.toJson(new CaisseMessage(this.appName, this.instanceID, client));
+//        Customer client = new Customer("mode", "fkdsjfkldsjf", list);
+        ProductReference productreference = new ProductReference(list);
+        String data = gson.toJson(new CaisseMessage2(this.appName, this.instanceID, productreference));
         System.out.println("myjsonStringDATA = " + data);
 
 
 //        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/service?fct=ticket&target=" + this.appName +"&targetInstance=" + this.instanceID + ""),
 //                new StringEntity("data=" + data));
 
-        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/service?fct=ticket&target=" + "BO" +"&targetInstance=" + "10" + ""),
+        MyHttpPost myHttpPost = new MyHttpPost(new HttpPost("http://" + this.stip + "/api/service?fct=productsToCaisse&target=" + "BO" +"&targetInstance=" + "10" + ""),
                 new StringEntity("data=" + data));
 
         return myHttpPost.execute();
     }
 
+    @RequestMapping(value = "/setAllTest")
+    public ModelAndView setAllTest(HttpServletRequest request) {
+        if (this.appName.equals("Caisse")) {
+            this.appip = "10.0.1.39:8080/BO";
+            this.instanceID = 1;
+        } else {
+            this.appip = "10.0.1.39:7070/BO";
+            this.instanceID = 10;
+        }
+
+        this.stip = "10.0.1.39:3000";
+        return new ModelAndView("redirect:/");
+    }
 
 
     @RequestMapping(value = "/testMsg")

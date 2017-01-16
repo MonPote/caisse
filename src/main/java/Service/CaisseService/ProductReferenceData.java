@@ -1,20 +1,19 @@
 package Service.CaisseService;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 /**
- * Created by patrickear on 14/1/2017.
+ * Created by patrickear on 16/1/2017.
  */
-public class CaisseData {
+public class ProductReferenceData {
     private String sender;
     private int instanceID;
     private String yourApp;
     private int yourInstance;
     private String date;
-    private Customer data;
+    private ProductReference data;
 
-    public String getDate() { return date; }
-
-    public Customer getData() { return data; }
+    public ProductReference getData() { return data; }
 
     @Override
     public String toString() {
