@@ -62,7 +62,7 @@ public class ParseFunction {
                 List<Produit> panier = customer.getPanier();
 
                 if (!customer.isValid()) {
-                    return "KO"; // PAS OK
+                    return "KO";
                 } else {
                     List<Product> basket = panier.stream()
                             .map(produit -> new Product(produit.getCodeProduit(), produit.getQuantity()))
@@ -72,12 +72,24 @@ public class ParseFunction {
                     CaisseWebService result = new CaisseWebService("Caisse", this.instanceID, purchaseInfo);
                     String newData = new Gson().toJson(result);
 
-                    // call BO
+                    // Send ticket to BO
                     sendMsg("Caisse", "1", newData);
                     return "OK";
                 }
             }
-            case "productsToCaisse": {
+            case "promotionsToCaisse": { // BO-CA-1
+                System.out.println("Inside promotionsToCaisse");
+                System.out.println("data = " + data);
+
+                PromotionData promotionData = gson.fromJson(data, PromotionData.class);
+                Promotion promotion = promotionData.getData();
+
+                System.out.println(promotionData.toString());
+                System.out.println(promotion.toString());
+                // FIXME need to compute some database action
+                return "KO";
+            }
+            case "productsToCaisse": { // BO-CA-2
                 System.out.println("Inside productsToCaisse");
                 System.out.println("data = " + data);
                 ProductReferenceData productReferenceData = gson.fromJson(data, ProductReferenceData.class);
@@ -88,17 +100,16 @@ public class ParseFunction {
                 // FIXME need to compute some database action
                 return "OK";
             }
-            case "promotionsToCaisse": {
-                System.out.println("Inside promotionsToCaisse");
-                System.out.println("data = " + data);
-                return "KO";
-            }
-            case "couponsToCaisse": {
+            case "couponsToCaisse": { // BO-CA-3
                 System.out.println("Inside couponsToCaisse");
                 System.out.println("data = " + data);
+
+
+                // FIXME need to display the coupon send to customer, print into the screen ?
                 return "KO";
             }
             case "ticketToBO": {
+                // FIXME Only for test not actually a Caisse function
                 System.out.println("Inside ticketToBO");
                 System.out.println("data = " + data);
                 return "OK";
